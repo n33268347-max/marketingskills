@@ -5,6 +5,8 @@
     "https://botb.com": "Same operator and terms as www.botb.com.",
     "https://cdn.botb.com": "Same operator and terms as www.botb.com.",
     "https://www.clickcompetitions.co.uk": "Click Competitions T&Cs clause 7.9 prohibit using 'any artificial intelligence tools when accessing the Services or data mining or extraction methods intended to scrape or extract data'; 7.11 prohibits software/APIs interacting without written consent. Found 2026-11-23.",
-    "https://clickcompetitions.co.uk": "Same operator and terms as www.clickcompetitions.co.uk."
+    "https://clickcompetitions.co.uk": "Same operator and terms as www.clickcompetitions.co.uk.",
+    "https://aspirecomps.co.uk": "PENDING HUMAN REVIEW: Aspire's terms are rendered client-side and could not be read by the fetcher (2026-11-23). No further automated access until a person confirms the terms do not prohibit it.",
+    "https://www.aspirecomps.co.uk": "PENDING HUMAN REVIEW: Aspire's terms are rendered client-side and could not be read by the fetcher (2026-11-23). No further automated access until a person confirms the terms do not prohibit it."
   }
 }

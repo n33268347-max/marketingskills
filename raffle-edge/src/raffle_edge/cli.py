@@ -130,6 +130,11 @@ def cmd_collect(args) -> int:
             return 0
         print(json.dumps(collect(conn, _fetcher(conn, args), max_pages=args.max_pages), indent=2))
         return 0
+    if args.platform == "rev-comps":
+        from .collector.revcomps import collect as rev_collect
+
+        print(json.dumps(rev_collect(conn, _fetcher(conn, args)), indent=2))
+        return 0
     print(f"no collector for {args.platform!r} yet", file=sys.stderr)
     return 2
 

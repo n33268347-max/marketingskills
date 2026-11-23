@@ -1087,6 +1087,20 @@
       ]
     },
     {
+      "slug": "aspire-competitions",
+      "name": "Aspire Competitions",
+      "base_url": "https://aspirecomps.co.uk",
+      "claims": [
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt allows all; terms not yet readable (rendered client-side). Automated access paused pending human review of terms.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
       "slug": "raffle-house",
       "name": "Raffle House",
       "base_url": "https://rafflehouse.com",

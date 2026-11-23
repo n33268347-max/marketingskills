@@ -1,0 +1,27 @@
+{
+  "frozen_at": "2026-11-23T06:37:05Z",
+  "code_commit": "64aabd0025e821d16025e98763aa4d21f8b91ac1",
+  "note": "V1 baseline. Immutable. Contains no personal data (winner names were never stored).",
+  "files": {
+    "draw_results.csv": {
+      "rows": 1650,
+      "sha256": "044c81e3087efcf498f0af0c0dde98b5dbd4298c1fad46e5ae3b82cda4ae8e33"
+    },
+    "competition_observations.csv": {
+      "rows": 266,
+      "sha256": "002eb0958f30b67d77566aa818ab70af1c7049411d31d6a3966c98b8d49bfc09"
+    },
+    "claims.csv": {
+      "rows": 271,
+      "sha256": "ced87531a3f9911ff9e0c14d74a6ba31d765ba00655d054546863b57be78da01"
+    },
+    "hypothesis_runs.csv": {
+      "rows": 3,
+      "sha256": "7d2ee56ed578f491bfca43a792d6a5a81b9052bb39384a359040fd3fc8ec3d10"
+    },
+    "snapshots_index.csv": {
+      "rows": 371,
+      "sha256": "3f3b207785fa45fa9a47acc4277d73b5ed791974b099a91069ba5aa5c7bd16ca"
+    }
+  }
+}

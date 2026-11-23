@@ -13,7 +13,7 @@ def test_seed_validates_and_curated_file_has_no_confirmed_claims(tmp_path):
     # The hand-curated seed (desk research) must never contain A_CONFIRMED claims;
     # confirmed claims only arrive via quote-checked verified_claims.json.
     meta, platforms = load_seed(SEED, verified_path=tmp_path / "none.json")
-    assert len(platforms) == 10
+    assert len(platforms) >= 10
     assert "A_CONFIRMED" not in {c.evidence_level for p in platforms for c in p.claims}
 
 

@@ -163,6 +163,9 @@ platforms = [
     U("results_page", "No public results archive found; entrants notified by email."),
     ROBOTS, U("code_of_practice", "Signatory status not established."),
   ]),
+  dict(slug="aspire-competitions", name="Aspire Competitions", base_url="https://aspirecomps.co.uk", claims=[
+    U("robots_results_allowed", "robots.txt allows all; terms not yet readable (rendered client-side). Automated access paused pending human review of terms."),
+  ]),
   dict(slug="raffle-house", name="Raffle House", base_url="https://rafflehouse.com", claims=[
     H("code_of_practice", "Reported in search results as a Code signatory; source not pinned. Not researched further in Phase 1.", value=None),
     U("winner_selection", "Not yet researched."),
