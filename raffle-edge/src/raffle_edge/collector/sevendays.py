@@ -13,6 +13,7 @@ local audit copy) still contains them and must never be published.
 from __future__ import annotations
 
 import json
+import re
 import logging
 import sqlite3
 from dataclasses import dataclass
@@ -139,6 +140,7 @@ def collect(conn: sqlite3.Connection, fetcher: PoliteFetcher, size: int = 100, m
 
 
 DETAIL = BASE + "/api/v2/raffle-draw/{slug}/GBP?include_finished=true"
+_CASH_TITLE = re.compile(r"£\s?[\d,.]+k?\s+(?:tax[- ]free\s+)?cash\b", re.I)
 
 
 def _pence(v) -> int | None:
@@ -157,8 +159,11 @@ def parse_detail(d: dict) -> dict:
     cash_total = (sum(_pence(p.get("cashAlternative")) or 0 for p in end_prizes) if end_prizes
                   else ((_pence(d.get("cash_alternative")) or 0) * count if d.get("cash_alternative") is not None else None))
     advertised = _pence(d.get("prize_value"))
-    if d.get("is_cash") and not cash_total and advertised is not None:
+    titles = [str(p.get("title") or "") for p in end_prizes]
+    titled_cash = bool(titles) and all(_CASH_TITLE.search(t) for t in titles)
+    if (d.get("is_cash") or titled_cash) and not cash_total and advertised is not None:
         # A cash prize has no separate "cash alternative": its cash value is the prize itself.
+        # The feed's is_cash flag is often false for these, so the prize title is used as evidence.
         cash_total = advertised * count
     return {
         "ticket_price_pence": _pence(single["price"]) if single else None,

@@ -50,3 +50,13 @@ def test_cash_prize_value_is_its_cash_value():
                       "end_prizes": [], "offers": [{"price": 0.02, "tickets_quantity": 1}],
                       "max_entries": 94999, "current_entries": 94999})
     assert v["cash_alternative_pence"] == 100000 and v["advertised_value_pence"] == 100000
+
+
+def test_cash_prize_detected_from_title_when_flag_is_false():
+    from raffle_edge.collector.sevendays import parse_detail
+    base = {"prize_value": "250", "is_cash": False, "cash_alternative": None, "prize_count": 1,
+            "offers": [{"price": 1.0, "tickets_quantity": 1}], "max_entries": 499, "current_entries": 499}
+    v = parse_detail({**base, "end_prizes": [{"title": "£250 Tax Free Cash #60"}]})
+    assert v["cash_alternative_pence"] == 25000
+    v = parse_detail({**base, "end_prizes": [{"title": "Win A Cash Register Toy"}]})
+    assert v["cash_alternative_pence"] is None  # not a cash prize; no guessing

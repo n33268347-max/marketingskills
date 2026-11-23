@@ -1,4 +1,4 @@
-> **Interim figure.** The H1 numbers quoted below come from a partial, uncorrected sample taken while collection was still running. They are superseded by the final figures in `docs/PHASE2_7_REPORT.md` and `docs/generated/ANALYSIS_7DAYS.md`.
+> **Corrected H1 figures.** The final sample (200 competitions, cash prizes valued correctly) gives positive EV at cash value in 3 of 200 (1.5%, 95% CI 0.5–4.3%), each worth only pennies, and in 11 of 200 at advertised value. Figures in the body that say otherwise came from a partial sample and are superseded. See `docs/PHASE2_7_REPORT.md`.
 
 # Raffle Edge Phase 7: desk research on three business models
 
@@ -20,7 +20,7 @@ Before you rely on any figure, re-check it against its primary source.
 
 - **The market is large and concentrated.** The DCMS-commissioned London Economics study (26 Jun 2025) put turnover at about **£1.3bn a year (range £0.7–2.1bn)**. It found about **7.4m UK adult entrants** and **401 active operators**. Omaze reportedly accounts for **over 60% of participants**. All of these are CONFIRMED (snippet), from secondary write-ups.
 - **Model 1 (paid entrant intelligence) is the weakest.** At least six free UK odds and comparison sites already exist. Raffle Edge's own data finds no entrant edge:
-  - 0 of 20 7days competitions had positive expected value (EV) at cash-alternative value.
+  - 3 of 200 sampled 7days competitions (1.5%) had positive expected value (EV) at cash value, each worth only pennies.
   - Draw positions show no departure from uniformity.
   - Selling "value" tips also attracts the harm and CAP problems below.
 - **Model 2 (free comparison site) is crowded and low-margin.**
@@ -77,7 +77,7 @@ Before you rely on any figure, re-check it against its primary source.
 
 | Analysis | Result |
 |---|---|
-| H1 ex-post EV | **0 of 20** competitions with a cash alternative had positive EV at cash value. 3 of 24 were positive at advertised prize value. |
+| H1 ex-post EV | **3 of 200** competitions had positive EV at cash value (max +5.3p/ticket). 11 of 200 were positive at advertised value. |
 | H3–H5 draw position | No departure from uniformity: KS p=0.12; BH-adjusted p all ≥0.47. |
 | Instant wins | Ticket numbers are randomly allocated, so there is no position edge. |
 

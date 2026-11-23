@@ -50,3 +50,39 @@ Limitations:
 - These tests check the draw step only (index within the list). They cannot check how ticket numbers were allocated, or whether the published list is complete.
 - **Independent validation:** not yet done. A significant result must be re-tested on draws collected after this report (a hold-out) before it counts as a finding.
 - A historical pattern is not evidence of future predictability.
+
+## Phase 5: walk-forward test of a "hot decile" pattern
+
+Training window: draws before 2026-09-01 (n=415). Test window: from 2026-09-01 (n=351).
+Most frequent winning decile in training: decile 5, hit rate 12.5% (baseline ≈10.0%).
+Test-window hit rate: **12.3%** (95% CI 9.0%–16.1%); one-sided binomial p = 0.098.
+Outcome: **not supported**. The in-sample 'pattern' did not hold out of sample.
+
+Even a supported result would not be actionable here: 7days allocates ticket numbers randomly, so entrants cannot choose a list position.
+
+
+## H1: positive-EV undersold draws (ex-post)
+
+Random sample (seed 20261123) of finished automated-draw competitions: 200 with complete value inputs, out of 766 in the archive.
+
+- **cash alternative**: 3/200 competitions had EV > 0 for a marginal ticket at close (1.5%, Wilson 95% CI 0.5%–4.3%). Mean EV per ticket -38.2p.
+- **advertised value**: 11/200 competitions had EV > 0 for a marginal ticket at close (5.5%, Wilson 95% CI 3.1%–9.6%). Mean EV per ticket -24.4p.
+- Fill rate (sold / max): median 80%, lower quartile 67%, sold out 44/200.
+- Return per £ (cash basis), median: 0.55.
+
+Positive-EV competitions (cash basis), largest first:
+
+| Competition | Price | Sold / max | Cash value | Break-even sold | EV per ticket |
+|---|---|---|---|---|---|
+| win-500-tax-free-cash-62 | 89p | 529 / 1,149 | £500 | 562 | +5.3p |
+| win-1-750-tax-free-cash-12 | 10p | 15,780 / 34,999 | £1,750 | 17,500 | +1.1p |
+| win-1-250-tax-free-cash-6 | 199p | 627 / 1,249 | £1,250 | 628 | +0.0p |
+
+Limitations:
+
+- Ex-post: uses FINAL sold counts, which a buyer does not know. This is an upper bound on achievable value.
+- Values are the operator's own figures; cash alternative is the conservative basis. Advertised values are not independently verified.
+- One extra ticket only; buying k tickets lowers per-ticket EV because N grows with k.
+- Excludes the free postal route, payment fees and the per-person ticket limit.
+- Sample of finished automated-draw competitions; live-draw and instant-win formats are not included.
+- **Not yet validated out of sample.** A strategy must be forward-tested on observations taken before close.
