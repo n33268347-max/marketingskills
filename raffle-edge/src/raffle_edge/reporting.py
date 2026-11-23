@@ -20,9 +20,20 @@ def _esc(s: str | None) -> str:
     return (s or "").replace("|", "\\|").replace("\n", " ")
 
 
-def ranking_report(conn: sqlite3.Connection) -> str:
-    conf = {s.slug: s for s in rank_all(conn, "confirmed")}
-    prov = rank_all(conn, "provisional")
+def _collection_status(conn: sqlite3.Connection, blocked_hosts: dict[str, str]) -> dict[str, str]:
+    from urllib.parse import urlsplit
+
+    out = {}
+    for r in conn.execute("SELECT slug, base_url FROM platforms"):
+        p = urlsplit(r["base_url"])
+        out[r["slug"]] = "manual only (terms)" if f"{p.scheme}://{p.netloc}" in blocked_hosts else "no prohibition found yet (see dossier)"
+    return out
+
+
+def ranking_report(conn: sqlite3.Connection, blocked_hosts: dict[str, str] | None = None) -> str:
+    status = _collection_status(conn, blocked_hosts or {})
+    conf_list = rank_all(conn, "confirmed")
+    prov = {s.slug: s for s in rank_all(conn, "provisional")}
     counts = dict(conn.execute("SELECT evidence_level, COUNT(*) FROM current_claims GROUP BY evidence_level").fetchall())
     lines = [
         "# Platform research ranking",
@@ -35,21 +46,21 @@ def ranking_report(conn: sqlite3.Connection) -> str:
         "The *provisional* columns also count search-snippet and third-party claims; they decide what to verify "
         "next and are not findings.",
         "",
-        "| # | Platform | Provisional research potential | Prov. accessibility | Prov. transparency | Prov. coverage | Confirmed research potential |",
-        "|---|---|---|---|---|---|---|",
+        "| # | Platform | Confirmed research potential | Conf. accessibility | Conf. transparency | Conf. coverage | Provisional potential | Automated collection |",
+        "|---|---|---|---|---|---|---|---|",
     ]
-    for i, s in enumerate(prov, 1):
-        c = conf[s.slug]
+    for i, c in enumerate(conf_list, 1):
+        p = prov[c.slug]
         lines.append(
-            f"| {i} | {s.name} | {s.research_potential} | {s.accessibility} | {s.transparency} | "
-            f"{int(s.evidence_coverage * 100)}% | {c.research_potential} |"
+            f"| {i} | {c.name} | {c.research_potential} | {c.accessibility} | {c.transparency} | "
+            f"{int(c.evidence_coverage * 100)}% | {p.research_potential} | {status[c.slug]} |"
         )
     lines += ["", "## Rubric", "", "Accessibility (0–100):", ""]
     lines += [f"- {k}: {w} pts (topic `{t}` = `{v}`)" for k, (t, v, w) in ACCESSIBILITY_RUBRIC.items()]
     lines += ["", "Transparency (0–100):", ""]
     lines += [f"- {k}: {w} pts (topic `{t}` {'documented' if v == '*' else '= `' + v + '`'})" for k, (t, v, w) in TRANSPARENCY_RUBRIC.items()]
-    lines += ["", "Research potential = 0.6 × accessibility + 0.4 × transparency.", "", "## Per-platform gaps (provisional basis)", ""]
-    for s in prov:
+    lines += ["", "Research potential = 0.6 × accessibility + 0.4 × transparency.", "", "## Per-platform gaps (confirmed basis)", ""]
+    for s in conf_list:
         lines.append(f"- **{s.name}**: earned {', '.join(s.earned) or 'nothing'}; "
                      f"gaps: {', '.join(s.gaps) or 'none'}; negatives: {', '.join(s.negatives) or 'none'}")
     return "\n".join(lines) + "\n"

@@ -1,6 +1,6 @@
 # Raffle Edge: Research & Development Plan
 
-_Version 0.1 · 2026-11-23 · Status: Phase 1 prototype complete; direct verification still to do_
+_Version 0.2 · 2026-11-23 · Status: Phase 1 and 1b complete (155 claims directly confirmed; see PHASE1_REPORT.md)_
 
 ## 1. Objective and prior expectations
 
@@ -31,27 +31,30 @@ Every hypothesis is pre-registered here before data is examined. Failed hypothes
 | H5 | Draw-to-draw winning positions are independent | Integrity | ordered series per platform | Lag-k autocorrelation, Ljung–Box, permutation test | Open |
 | H6 | The free postal route has higher EV per £ than paid entry on low-price competitions | Value | stamp cost, entries per postcard, ticket price | Arithmetic | Open; legal to report, never automated |
 | H7 | Advertised prize values exceed independently verified market values | Value accuracy | advertised value, cash alternative, market comparables | Paired ratio with CI | Open |
+| H8 | 7days' published seed/index/entry count reproduce each past automated draw (Mersenne Twister, time seed, per operator) | Integrity / audit | published seed, index, entries, winning ticket | Exact reproduction rate; any mismatch → disclosure | Open. Past draws only; no prediction. |
 
 ## 3. Research targets: the first ten platforms
 
 Selection criteria: scale or prominence, a raffle-style numbered-ticket format, and public information about draws.
 
-| Rank (provisional) | Platform | Why it matters | Data-access outlook | Transparency outlook |
-|---|---|---|---|---|
-| 1 | 7days Performance | Reportedly publishes per-draw winning ticket, timestamp, sold/total and live/auto flag. Random ticket allocation. | High (provisional) | Medium–High: "GLI certified" claim to verify |
-| 2 | Click Competitions | Draw-results pages with ticket numbers; entry lists claimed pre-draw | High (provisional) | Medium: "certified RNG", certifier unnamed |
-| 3 | Dream Car Giveaways | Winning numbers, caps and visible instant-win winning numbers | High (provisional) | Medium: **conflicting** RNG statements (PHP `random_int` vs Google RNG) |
-| 4 | Elite Competitions | All-winners page with ticket numbers; deep `/past/` archive | Medium–High | Low–Medium: "verified" ball selector unexplained; ASA history |
-| 5 | Rev Comps | Past entry lists with total/sold/remaining. Best candidate for **H1**. | Medium–High | Medium: ball machine / algorithm |
-| 6 | Lucky Day Competitions | Dated results pages with winning numbers; no sold counts | Medium | Low–Medium: inconsistent descriptions |
-| 7 | BOTB | Largest listed operator; PromoVeritas and independent lawyer | Medium (no ticket numbers: spot-the-ball) | High |
-| 8 | Omaze UK | Dominant share (>60% reported); GLI engine and Civica scrutineer | Low: no bounded ticket numbers, no entry counts | High |
-| 9 | Raffall | Marketplace of independent hosts; in-house automated draw | Low: no public archive found | Low |
-| 10 | Raffle House | Reported Code signatory; not yet researched | Unknown | Unknown |
+Ranked on the **confirmed** basis after Phase 1b. Exact scores are in `docs/generated/PLATFORM_RANKING.md`.
+
+| Rank | Platform | Why it matters | Automated collection |
+|---|---|---|---|
+| 1 | 7days Performance | Winning ticket, seed, index, entries and sold/total published per draw. Random allocation. Draws regardless of sell-out. | No prohibition found |
+| 2 | Elite Competitions | Winning ticket numbers; GLI-certified allocation RNG; physical ball machine; redraw on unsold | No prohibition found (excessive-traffic clause; ClaudeBot blocked, Claude-User not) |
+| 3 | Dream Car Giveaways | `random_int` or live presenter; max entries and % sold; Code signatory | No prohibition found |
+| 4 | Rev Comps | Entry lists with total/sold/remaining: best H1 data | No prohibition found (Crawl-delay 60 s) |
+| 5 | Lucky Day | Winning numbers back to Oct 2023; not a Code signatory | No prohibition found |
+| 6 | Click Competitions | Good data, but **terms prohibit AI/scraping** | **Manual only** |
+| 7 | Omaze UK | Market leader; entry codes only, no counts | No prohibition found |
+| 8 | BOTB | Spot-the-ball; **terms prohibit AI/scraping** | **Manual only** |
+| 9 | Raffle House | JS-rendered; robots disallows /winners | Results disallowed |
+| 10 | Raffall | JS-rendered; CAPTCHA on help centre; removed from the Code list | Not readable |
 
 The machine-generated version with exact rubric points is in `docs/generated/PLATFORM_RANKING.md`.
 
-**Every row is provisional.** Phase 1 desk research came from search-engine snippets and third parties. Direct page reads were blocked by the research sandbox's network policy, so no claim is yet `A_CONFIRMED`.
+Phase 1 rested on search snippets. Phase 1b replaced most of them with direct, quote-checked reads.
 
 ### What each platform can support
 
@@ -83,6 +86,8 @@ The database enforces these rules with `CHECK` constraints, not just convention.
 | Sequential (1..sold) | Uniform on 1..sold | u = (n − 1 + 0.5) / sold |
 | Random from 1..max, only sold eligible | Uniform on the *sold* numbers. These are a random subset of 1..max, so marginally uniform on 1..max. | u = (n − 1 + 0.5) / max |
 | Player-chosen numbers | **Not** uniform on the range. People favour some numbers. | Do not test positions; test only "drawn among sold" |
+
+**Confirmed in Phase 1b:** Elite, 7days (live and auto), Click auto and Rev Comps auto draw only from sold tickets; Elite and 7days redraw if an unsold number comes up. For these platforms the H0 for H3 is "uniform over the sold set".
 
 Getting this wrong manufactures fake anomalies. Allocation must therefore be `A_CONFIRMED` before running H3 on a platform.
 

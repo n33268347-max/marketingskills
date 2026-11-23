@@ -46,7 +46,7 @@ platforms = [
     P("independent_rng", "yes", "A page states 'Independently Certified by GLI'. Certificate scope not seen; GLI certification is of a system, not per-draw supervision.", "https://7daysperformance.co.uk", quote="Independently Certified by GLI"),
     P("instant_wins", "predetermined", "Instant-win outcomes predetermined by a random process; matching allocated ticket numbers win.", "https://7daysperformance.co.uk", quote="All outcomes are predetermined, using a random process"),
     P("free_entry_route", "yes", "Free postal entry via unenclosed postcard.", "https://7daysperformance.co.uk"),
-    H("notes", "A Trustpilot reviewer alleges a time-seeded Mersenne Twister RNG. Unverified; do NOT treat as fact. Testable only indirectly via outcome distributions."),
+    H("notes", "H8: The operator itself states automated draws use Mersenne Twister seeded from the current time and publishes seed, index and entry count (see confirmed claims). Hypothesis: published past automated draws can be independently REPRODUCED from the published seed, giving a full audit. Scope: verification of past results only; no prediction of future draws."),
     ROBOTS, U("code_of_practice", "Signatory status not established."),
   ]),
   dict(slug="elite-competitions", name="Elite Competitions", base_url="https://elitecompetitions.co.uk",

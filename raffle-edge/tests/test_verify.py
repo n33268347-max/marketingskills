@@ -32,3 +32,25 @@ def test_fabricated_quote_rejected(tmp_path):
 def test_missing_snapshot_rejected(tmp_path):
     ok, bad = check_claims(tmp_path, [_claim("ab" * 32, "x")])
     assert not ok and "archive" in bad[0]
+
+
+def test_redacted_quote_accepted_and_names_rejected(tmp_path):
+    sha = _archive(tmp_path, b"<p>Main prize winner Jane Q Public Ticket number 2823</p>")
+    ok, bad = check_claims(tmp_path, [_claim(sha, "Main prize winner [REDACTED] Ticket number 2823")])
+    assert len(ok) == 1 and not bad
+    ok, bad = check_claims(tmp_path, [_claim(sha, "Main prize winner Jane Q Public Ticket number 2823")])
+    assert not ok and "personal data" in bad[0]
+
+
+def test_json_name_field_rejected(tmp_path):
+    sha = _archive(tmp_path, b'{"winner":{"full_name":"Jane Public","ticket_number":"6"}}')
+    ok, bad = check_claims(tmp_path, [_claim(sha, '"full_name":"Jane Public","ticket_number":"6"')])
+    assert not ok
+
+
+def test_committed_verified_claims_contain_no_pii():
+    import json
+    from pathlib import Path
+    from raffle_edge.verify import contains_pii
+    data = json.loads((Path(__file__).resolve().parents[1] / "data/seed/verified_claims.json").read_text())
+    assert not [c for c in data if contains_pii(c["source_quote"]) or contains_pii(c["statement"])]

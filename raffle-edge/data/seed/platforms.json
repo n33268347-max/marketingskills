@@ -134,7 +134,7 @@
         {
           "topic": "notes",
           "value": null,
-          "statement": "A Trustpilot reviewer alleges a time-seeded Mersenne Twister RNG. Unverified; do NOT treat as fact. Testable only indirectly via outcome distributions.",
+          "statement": "H8: The operator itself states automated draws use Mersenne Twister seeded from the current time and publishes seed, index and entry count (see confirmed claims). Hypothesis: published past automated draws can be independently REPRODUCED from the published seed, giving a full audit. Scope: verification of past results only; no prediction of future draws.",
           "evidence_level": "C_HYPOTHESIS",
           "source_kind": "none"
         },

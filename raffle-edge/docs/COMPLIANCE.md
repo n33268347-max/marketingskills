@@ -6,10 +6,13 @@ _This document is not legal advice. Get a UK solicitor's review before any comme
 
 | Rule | Enforcement |
 |---|---|
-| Obey robots.txt | `PoliteFetcher` checks every URL. If robots.txt is unreachable, every path is treated as **disallowed**. |
+| Obey robots.txt | `PoliteFetcher` checks every URL. If robots.txt is unreachable, every path is treated as **disallowed**. If it serves HTML, there is no robots file (RFC 9309); this is flagged. |
 | No CAPTCHA or bot-challenge bypass | Challenge markers stop all requests to that host for the rest of the run. Nothing is solved or evaded. |
 | No authentication or account areas | GET only, no cookies, no credentials, no form posts. |
-| Rate limits | ≥ 5 s per host minimum (CLI refuses lower); 10 s default. |
+| Rate limits | ≥ 5 s per host minimum (CLI refuses lower); 10 s default; raised to the site's `Crawl-delay`. |
+| AI-agent robots rules | Rules for `Claude-User` are obeyed too, because an AI agent operates the tool. |
+| Terms that forbid AI/scraping | `data/seed/collection_blocklist.json` lists such hosts (currently BOTB and Click Competitions). The fetcher refuses them before any request. Data from them is manual-only, or obtained by asking the operator. |
+| Personal data in evidence | `merge-verified` rejects quotes that look like names; redact with `[REDACTED]`. Raw snapshots under `data/raw/` can contain winner names. They are gitignored, kept only locally for audit, and must not be published. |
 | Identify ourselves | The User-Agent names the project as non-commercial research. |
 | No automated entries | The codebase has no purchase or entry code and will not get any. |
 | No personal data | The schema has no column for winner names, locations or photos. Parsers must drop them. |

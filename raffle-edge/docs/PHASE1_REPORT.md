@@ -96,3 +96,95 @@ The tests cover:
 - Rev Comps' entry lists feed H1.
 
 Bring the Phase 3 value calculator forward alongside Phase 2. H1 is the most plausible genuine edge, and it needs no pattern-finding at all.
+
+---
+
+# Phase 1b: direct verification
+
+_2026-11-23_
+
+## What was completed
+
+- **Network access.** A personal cloud environment, `raffle-edge research`, now allows the 10 platform hosts and www.gov.uk.
+- **Live probe.** All 10 platforms were probed. Every robots.txt was archived. Every homepage, results page and terms page we requested was archived, apart from the challenged help.raffall.com.
+- **Direct reads.** 155 claims are now `A_CONFIRMED` from direct reads of operator pages and GOV.UK.
+  - Each claim cites the SHA-256 of the page it came from.
+  - The `merge-verified` command rejects any claim whose quote is not verbatim in that saved page. It was re-run over all 155 claims: 0 failures.
+- **Fetcher fixes found during the live run** (tests added for each):
+  - It now honours `Crawl-delay`. Click and Rev Comps set 60 s; the first probe used 6 s, which was faster than requested.
+  - It now obeys rules for `Claude-User` as well as our own User-Agent.
+  - An HTML page served at `/robots.txt` (7days) is treated as "no robots file" and flagged.
+  - A CAPTCHA false positive on Omaze, caused by a script merely *naming* `g-recaptcha-response`, is fixed.
+- **Terms-based blocklist** (`data/seed/collection_blocklist.json`). It is enforced before any request, including robots.txt, and covers:
+  - **BOTB:** T&Cs prohibit "any artificial intelligence tools … or data mining or extraction methods intended to scrape or extract data".
+  - **Click Competitions:** the same clause (7.9). Both are Winvia Entertainment companies.
+
+  Six BOTB pages had already been read before the clause was found, one of them the T&Cs themselves. Some Click pages were read before the agent reached clause 7.9, and it stopped fetching Click there. No further automated access to either.
+- **Personal-data guard.** Two quotes contained winner names; they were redacted. Claim merging now rejects quotes that look like personal data. **Note:** the Elite name was pushed in an earlier commit on this branch and is redacted in the current version.
+
+## Results: 41 tests pass
+
+## Confirmed findings (A)
+
+| Platform | Draw mechanism (operator's own words) | Unsold number drawn? | Draw regardless of sell-out | Results data |
+|---|---|---|---|---|
+| 7days Performance | Live: ball machine. Auto: "Mersenne Twister to find the winning ticket's position in the sorted list"; "The seed: This is calculated from the current time". Claims GLI-certified RNG. | Live: "keep re-spinning … until a number is generated that has been sold" | Yes (e.g. 1,278 of 1,299 sold) | Winning ticket number, seed, index, entries count. ~1,650 results back to May 2026. |
+| Elite | RNG (GLI-certified) assigns tickets; "physical random ball machine" picks the winner | Redraw until a sold ticket | Prizes awarded in full; T&Cs reserve a right to cancel | Date, prize, ticket number; past competition pages from 2024 |
+| Dream Car Giveaways | Live presenter, or "PHP's random_int" for Automated Draws. Compliance page: certified ball machine or RNG software. | Not stated | "regardless of the number of entries" | Winners page: name + date only, ~1 month. Ticket number on closed competitions not checked. |
+| Rev Comps | Ball machine live (Google RNG fallback); in-house algorithm over sold tickets for auto | Not stated (live) | Yes (e.g. 45,347 of 69,999 sold) | Entry lists show total/sold/remaining. Older data on prev.revcomps.com (not fetched). |
+| Lucky Day | Google RNG on Facebook Live; system pick for auto | Not stated | "no minimum number of entries" | Per-date winning ticket numbers back to Oct 2023; no sold counts |
+| Click | Certified RNG (certifier unnamed); auto over sold tickets only | "respins for undersold competitions" | Yes | **Manual only**: terms prohibit AI/scraping |
+| Omaze | Internal engine "certified by Gaming Labs, Inc (GLI)" | n/a (entry codes) | n/a | 73 winning entry codes (2026); past house draws to 2024; no entry counts |
+| BOTB | Spot-the-ball judged by panel with lawyer; other draws via "PromoVeritas or similar" | n/a | — | **Manual only**: terms prohibit AI/scraping |
+| Raffle House | JS-rendered; nothing readable | — | — | robots.txt disallows `/winners` |
+| Raffall | JS-rendered; help centre returned a CAPTCHA (not bypassed) | — | — | `/winners/raffles` 404 |
+
+**DCMS Code signatories** (GOV.UK list updated 19 Oct 2026):
+- **Listed:** 7 Days Performance, Click Competitions, Rev Comps, Dream Car Giveaways, Elite Competitions, BOTB, Omaze, Raffle House.
+- **Not listed:** Lucky Day.
+- **Removed:** Raffall, in a GOV.UK update.
+
+The Code requires one of three draw methods:
+- an independent person,
+- "a computer process that produces verifiably random and auditable results", or
+- "a certified physical drawing machine".
+
+It also bars cancelling a draw or reducing a prize because of low sales. It does **not** require publishing winners.
+
+**Provisional claims the direct reads overturned:**
+- **Omaze:** we had recorded no results page. In fact one exists.
+- **Dream Car Giveaways:**
+  - The "Google RNG" wording is no longer on its pages.
+  - Its winners page shows no ticket numbers.
+- **BOTB:** PromoVeritas is not named for Spot the Ball.
+- **Lucky Day:** it does disclose max tickets.
+
+## What this changes for the research
+
+1. **The null model is now known for several platforms.** At Elite, 7days live draws and the Click and Rev Comps auto draws, the winner is drawn only from **sold** tickets. The H3 uniformity test must therefore use the sold set, not the 1..max range (plan §5.1). For 7days, ticket numbers are also randomly allocated.
+2. **H1 (undersold draws) is structurally supported.** At least five operators state that draws go ahead regardless of sales, and the Code forbids cancelling for low sales. 7days and Rev Comps publish sold/total figures, which are exactly the H1 inputs.
+3. **H8 (new): auditing 7days' automated draws.** The operator publishes the seed, the winning index and the entry count, and names Mersenne Twister. If those published figures let us *reproduce* past results, every automated draw becomes independently auditable. That would be a positive transparency finding.
+   - It is **not** an entrant advantage. Tickets are randomly allocated and the sold list is fixed at close, so an entrant cannot use it.
+   - A time-based seed is technically weak, but its main risk is operator-side, not player-side.
+   - Scope: reproduce **past published draws only**. No prediction of future draws. Any discrepancy goes to the disclosure process in `COMPLIANCE.md`.
+
+## Still unverified
+
+- Raffall and Raffle House: everything except robots.txt and signatory status. Their pages are JS-rendered, and Raffall's help centre returned a CAPTCHA.
+- Dream Car Giveaways: whether closed competition pages show the winning number.
+- Rev Comps and Click: whether results include ticket numbers. Their results pages are JS-rendered.
+- Elite: whether "total amount of entries" on past pages means tickets sold or the cap.
+- Main-draw ticket allocation: Elite, Rev Comps, Lucky Day, Click.
+- 7days: GLI certificate scope. We saw only the claim.
+
+## Recommended next step: Phase 2
+
+Phase 2 is the historical database plus the Phase 3 value calculator, run together. Work in this order:
+
+1. **7days:**
+   - Collect the draw-results archive through its public JSON feed, with names dropped at ingest.
+   - Reproduce past automated draws from the published seeds (H8).
+   - Compute EV for undersold draws (H1).
+2. **Rev Comps:** collect entry lists (total/sold/remaining) to measure how often competitions close undersold.
+3. **Elite and Lucky Day:** collect winning ticket numbers for H3, once the sold counts are confirmed.
+4. **BOTB and Click:** use them only for manual value comparisons, or ask the operators for data.

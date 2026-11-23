@@ -58,7 +58,7 @@ def cmd_report(args) -> int:
     conn = _conn(args)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "PLATFORM_RANKING.md").write_text(ranking_report(conn), encoding="utf-8")
+    (out / "PLATFORM_RANKING.md").write_text(ranking_report(conn, json.loads(DEFAULT_BLOCKLIST.read_text(encoding="utf-8"))["hosts"] if DEFAULT_BLOCKLIST.exists() else {}), encoding="utf-8")
     (out / "PLATFORM_DOSSIERS.md").write_text(dossiers_report(conn), encoding="utf-8")
     print(f"wrote {out/'PLATFORM_RANKING.md'} and {out/'PLATFORM_DOSSIERS.md'}")
     return 0

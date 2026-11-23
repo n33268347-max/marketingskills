@@ -51,9 +51,28 @@ def quote_found(raw_dir: Path, sha256: str, quote: str) -> bool:
     q = normalise(quote)
     if q in text:
         return True
-    # Tolerate an ellipsis joining two verbatim fragments.
-    parts = [p.strip() for p in re.split(r"\.\.\.|…", q) if p.strip()]
-    return len(parts) > 1 and all(p in text for p in parts)
+    # Tolerate an ellipsis or a [REDACTED] gap joining verbatim fragments, in order.
+    parts = [p.strip() for p in re.split(r"\.\.\.|…|\[redacted\]", q) if p.strip()]
+    if len(parts) < 2:
+        return False
+    pos = 0
+    for part in parts:
+        pos = text.find(part, pos)
+        if pos < 0:
+            return False
+        pos += len(part)
+    return True
+
+
+# Personal data must never enter the registry (UK GDPR; project policy).
+_PII = re.compile(
+    r'"(?:full_name|first_name|last_name|name|email|phone)"\s*:\s*"(?!\[REDACTED\])[^"]+"'
+    r"|winner\s+(?!\[REDACTED\])[A-Z][a-z]+(?:\s+[A-Z]\.?)?\s+[A-Z][a-z]+",
+)
+
+
+def contains_pii(text: str | None) -> bool:
+    return bool(text and _PII.search(text))
 
 
 def check_claims(raw_dir: Path, items: list[dict]) -> tuple[list[dict], list[str]]:
@@ -66,6 +85,8 @@ def check_claims(raw_dir: Path, items: list[dict]) -> tuple[list[dict], list[str
         try:
             claim = Claim(**item)
             claim.validate(slug or "?")
+            if contains_pii(claim.source_quote) or contains_pii(claim.statement):
+                raise RegistryError("possible personal data (e.g. a winner's name); redact with [REDACTED]")
             if claim.evidence_level == "A_CONFIRMED":
                 if not (claim.snapshot_sha256 and claim.source_quote):
                     raise RegistryError("needs snapshot_sha256 and source_quote")

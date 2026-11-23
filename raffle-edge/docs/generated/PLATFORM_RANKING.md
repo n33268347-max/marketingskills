@@ -2,22 +2,22 @@
 
 _Generated 2026-11-23 by `raffle-edge report`. Do not edit by hand._
 
-Claim counts by evidence level: C · hypothesis: 4, P · provisional: 75, unknown: 35
+Claim counts by evidence level: A · confirmed: 135, C · hypothesis: 4, P · provisional: 53, unknown: 35
 
 **Read this first.** The *confirmed* columns use only claims read directly from a primary source. The *provisional* columns also count search-snippet and third-party claims; they decide what to verify next and are not findings.
 
-| # | Platform | Provisional research potential | Prov. accessibility | Prov. transparency | Prov. coverage | Confirmed research potential |
-|---|---|---|---|---|---|---|
-| 1 | 7days Performance | 88.0 | 90 | 85 | 80% | 0.0 |
-| 2 | Click Competitions | 78.0 | 90 | 60 | 70% | 0.0 |
-| 3 | Dream Car Giveaways | 78.0 | 90 | 60 | 70% | 0.0 |
-| 4 | Elite Competitions | 60.0 | 70 | 45 | 50% | 0.0 |
-| 5 | Rev Comps | 57.0 | 65 | 45 | 50% | 0.0 |
-| 6 | Lucky Day Competitions | 51.0 | 55 | 45 | 40% | 0.0 |
-| 7 | BOTB (Best of the Best) | 44.0 | 30 | 65 | 50% | 0.0 |
-| 8 | Omaze UK | 26.0 | 0 | 65 | 40% | 0.0 |
-| 9 | Raffall | 10.0 | 0 | 25 | 20% | 0.0 |
-| 10 | Raffle House | 0.0 | 0 | 0 | 0% | 0.0 |
+| # | Platform | Confirmed research potential | Conf. accessibility | Conf. transparency | Conf. coverage | Provisional potential | Automated collection |
+|---|---|---|---|---|---|---|---|
+| 1 | 7days Performance | 84.0 | 90 | 75 | 90% | 84.0 | no prohibition found yet (see dossier) |
+| 2 | Elite Competitions | 72.0 | 70 | 75 | 80% | 72.0 | no prohibition found yet (see dossier) |
+| 3 | Dream Car Giveaways | 69.0 | 65 | 75 | 90% | 69.0 | no prohibition found yet (see dossier) |
+| 4 | Rev Comps | 69.0 | 65 | 75 | 80% | 69.0 | no prohibition found yet (see dossier) |
+| 5 | Lucky Day Competitions | 66.0 | 70 | 60 | 90% | 66.0 | no prohibition found yet (see dossier) |
+| 6 | Click Competitions | 57.0 | 45 | 75 | 80% | 72.0 | manual only (terms) |
+| 7 | Omaze UK | 34.0 | 30 | 40 | 80% | 34.0 | no prohibition found yet (see dossier) |
+| 8 | BOTB (Best of the Best) | 26.0 | 0 | 65 | 60% | 26.0 | manual only (terms) |
+| 9 | Raffle House | 6.0 | 0 | 15 | 10% | 6.0 | no prohibition found yet (see dossier) |
+| 10 | Raffall | 0.0 | 0 | 0 | 10% | 10.0 | no prohibition found yet (see dossier) |
 
 ## Rubric
 
@@ -39,15 +39,15 @@ Transparency (0–100):
 
 Research potential = 0.6 × accessibility + 0.4 × transparency.
 
-## Per-platform gaps (provisional basis)
+## Per-platform gaps (confirmed basis)
 
-- **7days Performance**: earned public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, winner selection method published, named independent random source, public live/recorded draw, ticket allocation method published; gaps: robots.txt permits results pages, DCMS code of practice signatory; negatives: none
-- **Click Competitions**: earned public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published; gaps: robots.txt permits results pages, named independent random source, DCMS code of practice signatory; negatives: none
-- **Dream Car Giveaways**: earned public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw, DCMS code of practice signatory; gaps: robots.txt permits results pages, named independent random source, ticket allocation method published; negatives: none
-- **Elite Competitions**: earned public results page, results include winning ticket number, max tickets disclosed, winner selection method published, public live/recorded draw; gaps: tickets sold disclosed, robots.txt permits results pages, named independent random source, ticket allocation method published, DCMS code of practice signatory; negatives: none
-- **Rev Comps**: earned public results page, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw; gaps: results include winning ticket number, robots.txt permits results pages, named independent random source, ticket allocation method published, DCMS code of practice signatory; negatives: none
-- **Lucky Day Competitions**: earned public results page, results include winning ticket number, winner selection method published, public live/recorded draw; gaps: tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, named independent random source, ticket allocation method published, DCMS code of practice signatory; negatives: none
-- **BOTB (Best of the Best)**: earned public results page, winner selection method published, named independent random source, DCMS code of practice signatory; gaps: tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, public live/recorded draw, ticket allocation method published; negatives: results include winning ticket number
-- **Omaze UK**: earned winner selection method published, named independent random source, DCMS code of practice signatory; gaps: public results page, results include winning ticket number, tickets sold disclosed, robots.txt permits results pages, public live/recorded draw, ticket allocation method published; negatives: max tickets disclosed
-- **Raffall**: earned winner selection method published; gaps: public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, named independent random source, ticket allocation method published, DCMS code of practice signatory; negatives: public live/recorded draw
-- **Raffle House**: earned nothing; gaps: public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, winner selection method published, named independent random source, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; negatives: none
+- **7days Performance**: earned public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; gaps: robots.txt permits results pages; negatives: named independent random source
+- **Elite Competitions**: earned public results page, results include winning ticket number, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; gaps: tickets sold disclosed, robots.txt permits results pages; negatives: named independent random source
+- **Dream Car Giveaways**: earned public results page, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; gaps: robots.txt permits results pages; negatives: results include winning ticket number, named independent random source
+- **Rev Comps**: earned public results page, tickets sold disclosed, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; gaps: results include winning ticket number, robots.txt permits results pages; negatives: named independent random source
+- **Lucky Day Competitions**: earned public results page, results include winning ticket number, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published; gaps: robots.txt permits results pages; negatives: tickets sold disclosed, named independent random source, DCMS code of practice signatory
+- **Click Competitions**: earned public results page, max tickets disclosed, winner selection method published, public live/recorded draw, ticket allocation method published, DCMS code of practice signatory; gaps: results include winning ticket number, robots.txt permits results pages; negatives: tickets sold disclosed, named independent random source
+- **Omaze UK**: earned public results page, winner selection method published, DCMS code of practice signatory; gaps: robots.txt permits results pages, ticket allocation method published; negatives: results include winning ticket number, tickets sold disclosed, max tickets disclosed, named independent random source, public live/recorded draw
+- **BOTB (Best of the Best)**: earned winner selection method published, named independent random source, DCMS code of practice signatory; gaps: results include winning ticket number, tickets sold disclosed, robots.txt permits results pages, ticket allocation method published; negatives: public results page, max tickets disclosed, public live/recorded draw
+- **Raffle House**: earned DCMS code of practice signatory; gaps: public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, winner selection method published, named independent random source, public live/recorded draw, ticket allocation method published; negatives: none
+- **Raffall**: earned nothing; gaps: public results page, results include winning ticket number, tickets sold disclosed, max tickets disclosed, robots.txt permits results pages, winner selection method published, named independent random source, public live/recorded draw, ticket allocation method published; negatives: DCMS code of practice signatory
