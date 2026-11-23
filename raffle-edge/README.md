@@ -2,7 +2,7 @@
 
 Evidence-first research tooling for UK online prize competitions. The question it asks: is there a legitimate, measurable statistical or value advantage anywhere? A null answer is an acceptable result.
 
-**Status:** Phases 1–1b complete; Phase 2–5 modules built and running on 7days Performance. See [docs/PHASE1_REPORT.md](docs/PHASE1_REPORT.md) and [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md).
+**Status:** V2 complete. See [docs/v2/RAFFLE_EDGE_V2_MASTER_REPORT.md](docs/v2/RAFFLE_EDGE_V2_MASTER_REPORT.md) (decision, answers, evidence). V1 results are frozen in `data/frozen/v1/`. See [docs/PHASE1_REPORT.md](docs/PHASE1_REPORT.md) and [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md).
 
 ## Quick start
 

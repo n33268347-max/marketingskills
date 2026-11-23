@@ -16,11 +16,14 @@ Using that published method:
 - **5 August – 20 October 2026:** the published `rng_seed` values became integers of varying length, some of them single digits. With the published method, none of these 315 draws reproduce, whether we use the timestamp or the published value as the seed.
 - **From 21 October 2026:** `rng_seed` is a 64-character hexadecimal string. None of these 149 draws reproduce with the published method.
 
+We also tried PHP 8.2's `Xoshiro256StarStar` engine with the published values. It does not reproduce the draws either.
+
 We are not suggesting anything is wrong with the draws themselves. Our statistical tests on all 766 automated draws show no departure from uniformity. We'd simply like to describe your current process accurately.
 
 1. Did the automated-draw method or the seed derivation change on about 4–5 August 2026, and again on about 21 October 2026?
 2. How should the public verify a current automated draw from the published `rng_seed`?
 3. Will the Draws Explained page be updated?
+4. Would you consider publishing a numbers-only entry list (or its hash) and a pre-close seed commitment, so that every draw can be verified end to end? We have a short, free reference specification we'd be happy to share.
 
 We'd be glad to share our reproduction code. We will not publish anything about this point before giving you a reasonable chance to reply (we propose 30 days).
 
