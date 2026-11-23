@@ -78,3 +78,41 @@ def test_snapshots_archived_and_logged(conn, tmp_path):
     row = conn.execute("SELECT * FROM snapshots WHERE id=?", (r.snapshot_id,)).fetchone()
     assert row["outcome"] == "ok" and row["content_sha256"]
     assert (tmp_path / row["content_path"]).read_bytes() == b"body"
+
+
+def test_captcha_reference_on_normal_page_is_not_a_challenge():
+    from raffle_edge.collector.fetcher import looks_like_challenge
+    page = b"<html><head><title>Win a House | Example</title></head><body>" + b"x" * 60_000 + \
+        b"<script>const d=['g-recaptcha-response','h-captcha-response']</script></body></html>"
+    assert not looks_like_challenge(200, page)
+
+
+def test_interstitial_200_is_a_challenge():
+    from raffle_edge.collector.fetcher import looks_like_challenge
+    assert looks_like_challenge(200, b"<html><head><title>Just a moment...</title></head></html>")
+    assert looks_like_challenge(200, b"<html><script src='/cdn-cgi/challenge-platform/x.js'></script></html>")
+
+
+def test_crawl_delay_is_honoured(conn, tmp_path):
+    pages = {"https://x.test/robots.txt": (200, b"User-agent: *\nCrawl-delay: 60\n"),
+             "https://x.test/a": (200, b"a"), "https://x.test/b": (200, b"b")}
+    f, _, clock = make(conn, tmp_path, pages, delay=10)
+    f.fetch("https://x.test/a")
+    f.fetch("https://x.test/b")
+    assert clock.slept and max(clock.slept) >= 60
+
+
+def test_claude_user_rules_are_honoured(conn, tmp_path):
+    pages = {"https://x.test/robots.txt": (200, b"User-agent: Claude-User\nDisallow: /\n\nUser-agent: *\nAllow: /\n"),
+             "https://x.test/a": (200, b"a")}
+    f, calls, _ = make(conn, tmp_path, pages)
+    assert f.fetch("https://x.test/a").outcome == "blocked_by_robots"
+    assert "https://x.test/a" not in calls
+
+
+def test_html_robots_treated_as_absent(conn, tmp_path):
+    pages = {"https://x.test/robots.txt": (200, b"<!doctype html><html><body>app</body></html>"),
+             "https://x.test/a": (200, b"a")}
+    f, _, _ = make(conn, tmp_path, pages)
+    assert f.fetch("https://x.test/a").ok
+    assert "HTML" in f.robots_notes["https://x.test"]

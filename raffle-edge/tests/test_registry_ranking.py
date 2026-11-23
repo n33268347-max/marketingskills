@@ -45,9 +45,9 @@ def test_claim_validation_rejects(bad):
 def test_rubric_points_and_gaps(conn, tmp_path):
     seed = {"platforms": [{"slug": "demo", "name": "Demo", "base_url": "https://d.test", "claims": [
         {"topic": "results_page", "value": "yes", "statement": "s", "evidence_level": "A_CONFIRMED",
-         "source_url": "https://d.test/w", "source_kind": "primary_direct", "accessed_on": "2026-01-01"},
+         "source_url": "https://d.test/w", "source_kind": "primary_direct", "accessed_on": "2026-01-01", "snapshot_sha256": "ab"},
         {"topic": "independent_rng", "value": "no", "statement": "s", "evidence_level": "A_CONFIRMED",
-         "source_url": "https://d.test/t", "source_kind": "primary_direct", "accessed_on": "2026-01-01"},
+         "source_url": "https://d.test/t", "source_kind": "primary_direct", "accessed_on": "2026-01-01", "snapshot_sha256": "cd"},
         {"topic": "live_draw", "value": "yes", "statement": "s", "evidence_level": "C_HYPOTHESIS"},
     ]}]}
     f = tmp_path / "s.json"

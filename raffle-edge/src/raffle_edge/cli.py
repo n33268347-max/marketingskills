@@ -73,6 +73,43 @@ def cmd_probe(args) -> int:
     return 0
 
 
+def cmd_fetch(args) -> int:
+    """Fetch URLs through the compliant fetcher; write readable text for review."""
+    from bs4 import BeautifulSoup
+    import re
+
+    conn = _conn(args)
+    fetcher = PoliteFetcher(conn, args.raw, min_delay_s=args.delay)
+    out = Path(args.text_dir) if args.text_dir else None
+    if out:
+        out.mkdir(parents=True, exist_ok=True)
+    for url in args.urls:
+        res = fetcher.fetch(url)
+        row = conn.execute("SELECT content_sha256, content_path FROM snapshots WHERE id=?", (res.snapshot_id,)).fetchone()
+        line = f"{res.outcome:19} {res.status or '-':>4} snapshot={res.snapshot_id} sha={(row['content_sha256'] or '')[:12]} {url}"
+        if out and res.body:
+            soup = BeautifulSoup(res.text(), "lxml")
+            for t in soup(["script", "style", "noscript"]):
+                t.decompose()
+            text = re.sub(r"\n\s*\n+", "\n", soup.get_text("\n", strip=True))
+            dest = out / f"snapshot-{res.snapshot_id}.txt"
+            dest.write_text(f"URL: {url}\nSNAPSHOT: {res.snapshot_id}\nSHA256: {row['content_sha256']}\n\n{text}", encoding="utf-8")
+            line += f" -> {dest}"
+        print(line, flush=True)
+    return 0
+
+
+def cmd_merge_verified(args) -> int:
+    from .verify import merge_files
+
+    out = Path(args.seed).with_name("verified_claims.json")
+    n, rejected = merge_files(Path(args.raw), [Path(f) for f in args.files], out)
+    print(f"{n} quote-checked claims added to {out}; {len(rejected)} rejected")
+    for r in rejected:
+        print("  REJECTED " + r)
+    return 0
+
+
 def cmd_extract(args) -> int:
     """Parse a locally saved HTML file (e.g. an archived snapshot) and optionally store it."""
     html = Path(args.html).read_text(encoding="utf-8", errors="replace")
@@ -116,6 +153,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--raw", default=str(DEFAULT_RAW))
     p.add_argument("--delay", type=float, default=10.0, help="min seconds between requests per host (>=5)")
     p.set_defaults(fn=cmd_probe)
+    p = sub.add_parser("fetch", help="fetch URLs politely and archive them")
+    p.add_argument("urls", nargs="+")
+    p.add_argument("--raw", default=str(DEFAULT_RAW))
+    p.add_argument("--delay", type=float, default=10.0)
+    p.add_argument("--text-dir", help="write readable text of each page here")
+    p.set_defaults(fn=cmd_fetch)
+    p = sub.add_parser("merge-verified", help="quote-check claim files and merge into verified_claims.json")
+    p.add_argument("files", nargs="+")
+    p.add_argument("--raw", default=str(DEFAULT_RAW))
+    p.set_defaults(fn=cmd_merge_verified)
     p = sub.add_parser("extract", help="parse a saved competition page")
     p.add_argument("html")
     p.add_argument("--store", action="store_true")

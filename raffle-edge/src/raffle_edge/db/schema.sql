@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS claims (
     source_quote   TEXT,
     accessed_on    TEXT,               -- ISO date the source was read
     analysis_ref   TEXT,               -- for B_OBSERVATION
+    snapshot_sha256 TEXT,              -- archived page the claim was read from
     recorded_by    TEXT NOT NULL DEFAULT 'unknown',
     recorded_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     supersedes_id  INTEGER REFERENCES claims(id),

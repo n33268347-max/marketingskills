@@ -33,11 +33,28 @@ def connect(path: str | Path) -> sqlite3.Connection:
 def init_schema(conn: sqlite3.Connection) -> None:
     sql = resources.files("raffle_edge.db").joinpath("schema.sql").read_text(encoding="utf-8")
     conn.executescript(sql)
+    _migrate(conn)
     conn.execute(
         "INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('schema_version', ?)",
         (SCHEMA_VERSION,),
     )
     conn.commit()
+
+
+# Additive, idempotent migrations for databases created by older versions.
+# Only ADD COLUMN is allowed: history is never rewritten.
+_ADDED_COLUMNS = {
+    "claims": {"snapshot_sha256": "TEXT"},
+}
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    for table, cols in _ADDED_COLUMNS.items():
+        have = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+        for col, decl in cols.items():
+            if col not in have:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {decl}")
+                log.info("migrated: %s.%s added", table, col)
 
 
 @contextmanager

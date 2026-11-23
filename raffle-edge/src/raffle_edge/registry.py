@@ -62,6 +62,7 @@ class Claim:
     source_quote: str | None = None
     accessed_on: str | None = None
     analysis_ref: str | None = None
+    snapshot_sha256: str | None = None
 
     def validate(self, platform: str) -> None:
         where = f"{platform}/{self.topic}"
@@ -77,6 +78,8 @@ class Claim:
             raise RegistryError(f"{where}: bad source_kind {self.source_kind!r}")
         if self.evidence_level == "A_CONFIRMED" and self.source_kind not in ("primary_direct", "regulator"):
             raise RegistryError(f"{where}: A_CONFIRMED requires a direct primary or regulator source")
+        if self.evidence_level == "A_CONFIRMED" and self.source_kind == "primary_direct" and not self.snapshot_sha256:
+            raise RegistryError(f"{where}: A_CONFIRMED primary_direct claims must cite the archived snapshot_sha256")
         if self.evidence_level == "P_PROVISIONAL" and not self.source_url:
             raise RegistryError(f"{where}: P_PROVISIONAL claims need source_url")
         if self.evidence_level == "B_OBSERVATION" and not self.analysis_ref:
@@ -93,8 +96,18 @@ class Platform:
     claims: list[Claim] = field(default_factory=list)
 
 
-def load_seed(path: str | Path) -> tuple[dict[str, Any], list[Platform]]:
+def load_seed(path: str | Path, verified_path: str | Path | None = None) -> tuple[dict[str, Any], list[Platform]]:
+    """Load the curated seed plus (optionally) quote-checked verified claims.
+
+    `verified_path` defaults to `verified_claims.json` next to the seed file.
+    """
     data = json.loads(Path(path).read_text(encoding="utf-8"))
+    vpath = Path(verified_path) if verified_path else Path(path).with_name("verified_claims.json")
+    verified: dict[str, list[dict]] = {}
+    if vpath.exists():
+        for item in json.loads(vpath.read_text(encoding="utf-8")):
+            item = dict(item)
+            verified.setdefault(item.pop("platform_slug"), []).append(item)
     meta = data.get("meta", {})
     platforms: list[Platform] = []
     seen: set[str] = set()
@@ -102,7 +115,7 @@ def load_seed(path: str | Path) -> tuple[dict[str, Any], list[Platform]]:
         if p["slug"] in seen:
             raise RegistryError(f"duplicate platform slug {p['slug']}")
         seen.add(p["slug"])
-        claims = [Claim(**c) for c in p.get("claims", [])]
+        claims = [Claim(**c) for c in p.get("claims", []) + verified.pop(p["slug"], [])]
         for c in claims:
             c.validate(p["slug"])
         platforms.append(
@@ -115,6 +128,8 @@ def load_seed(path: str | Path) -> tuple[dict[str, Any], list[Platform]]:
                 claims=claims,
             )
         )
+    if verified:
+        raise RegistryError(f"verified claims for unknown platforms: {sorted(verified)}")
     return meta, platforms
 
 
@@ -157,6 +172,7 @@ def sync_to_db(conn: sqlite3.Connection, platforms: list[Platform], recorded_by:
                         "source_quote": c.source_quote,
                         "accessed_on": c.accessed_on,
                         "analysis_ref": c.analysis_ref,
+                        "snapshot_sha256": c.snapshot_sha256,
                         "recorded_by": recorded_by,
                         "supersedes_id": prev["id"] if prev else None,
                     },

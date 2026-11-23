@@ -3,7 +3,11 @@
 Guarantees:
   * robots.txt is fetched and obeyed for every host before any other request.
     If robots.txt cannot be read, the host is treated as disallowed.
-  * A minimum delay per host (default 10 s) is enforced.
+  * A minimum delay per host (default 10 s) is enforced, raised to the site's
+    Crawl-delay when robots.txt sets one.
+  * Rules robots.txt sets for `Claude-User` (the token for user-directed Claude
+    fetches) are obeyed as well as rules for our own User-Agent, because an AI
+    agent operates this tool.
   * No cookies are kept, no logins, no form posts. GET only.
   * If a CAPTCHA / bot challenge / access block is detected the fetcher records
     it and refuses further requests to that host for the rest of the run.
@@ -31,6 +35,8 @@ from ..db.database import insert, transaction
 log = logging.getLogger(__name__)
 
 DEFAULT_USER_AGENT = "RaffleEdgeResearch/0.1 (+non-commercial statistical research; obeys robots.txt)"
+# Additional robots.txt tokens whose rules we also honour.
+EXTRA_ROBOTS_TOKENS = ("Claude-User",)
 
 CHALLENGE_MARKERS = (
     "cf-chl-",
@@ -84,12 +90,27 @@ class FetchResult:
         return (self.body or b"").decode("utf-8", errors="replace")
 
 
+_INTERSTITIAL_TITLE = re.compile(
+    r"<title[^>]*>\s*(just a moment|attention required|access denied|are you a robot|"
+    r"verify you are human|security check|pardon our interruption|captcha)",
+    re.I,
+)
+
+
 def looks_like_challenge(status: int, body: bytes) -> bool:
+    """Detect a bot-challenge / CAPTCHA interstitial.
+
+    A normal page that merely *references* a CAPTCHA (e.g. a login form script
+    naming `g-recaptcha-response`) is NOT a challenge. For 2xx responses we
+    require an interstitial-style title or a Cloudflare/PerimeterX challenge
+    script on a small page.
+    """
     head = body[:200_000].decode("utf-8", errors="ignore").lower()
     if status in (401, 403, 429, 503) and any(m in head for m in CHALLENGE_MARKERS):
         return True
-    # Some challenges return 200 with an interstitial page.
-    return bool(re.search(r"cf-chl-|g-recaptcha|h-captcha|px-captcha", head))
+    if _INTERSTITIAL_TITLE.search(head):
+        return True
+    return len(body) < 50_000 and bool(re.search(r"cf-chl-|/cdn-cgi/challenge-platform|px-captcha|captcha-delivery", head))
 
 
 class PoliteFetcher:
@@ -115,6 +136,8 @@ class PoliteFetcher:
         self._robots: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         self._last_hit: dict[str, float] = {}
         self._blocked_hosts: dict[str, str] = {}
+        self._host_delay: dict[str, float] = {}
+        self.robots_notes: dict[str, str] = {}
 
     # -- helpers --------------------------------------------------------------
     @staticmethod
@@ -127,7 +150,7 @@ class PoliteFetcher:
     def _throttle(self, host: str) -> None:
         last = self._last_hit.get(host)
         if last is not None:
-            wait = self.min_delay_s - (self.clock() - last)
+            wait = self._host_delay.get(host, self.min_delay_s) - (self.clock() - last)
             if wait > 0:
                 self.sleep(wait)
         self._last_hit[host] = self.clock()
@@ -194,14 +217,32 @@ class PoliteFetcher:
         elif resp.status >= 500:
             rp = None  # server error => be conservative
         else:
-            rp.parse(resp.body.decode("utf-8", "replace").splitlines())
-        self._record(robots_url, "ok" if resp.status < 400 else "http_error", True, resp, None)
+            text = resp.body.decode("utf-8", "replace")
+            if text.lstrip()[:15].lower().startswith(("<!doctype", "<html")):
+                # Site serves its HTML app for /robots.txt: no robots file exists.
+                # Per RFC 9309 that means no restrictions; flag it for review.
+                rp.allow_all = True
+                note = "robots.txt returned HTML (no robots file); treated as allow-all per RFC 9309"
+                self.robots_notes[host] = note
+                log.warning("%s: %s", host, note)
+            else:
+                rp.parse(text.splitlines())
+        note = self.robots_notes.get(host)
+        if rp is not None:
+            delays = [d for d in (rp.crawl_delay(self.user_agent), rp.crawl_delay("*")) if d]
+            delay = max([self.min_delay_s, *(float(d) for d in delays)])
+            self._host_delay[host] = delay
+            if delay > self.min_delay_s:
+                log.info("%s: honouring Crawl-delay %.0fs", host, delay)
+        self._record(robots_url, "ok" if resp.status < 400 else "http_error", True, resp, note)
         self._robots[host] = rp
         return rp
 
     def allowed(self, url: str) -> bool:
         rp = self.robots_for(url)
-        return bool(rp and rp.can_fetch(self.user_agent, url))
+        if rp is None:
+            return False
+        return all(rp.can_fetch(ua, url) for ua in (self.user_agent, *EXTRA_ROBOTS_TOKENS))
 
     # -- public ---------------------------------------------------------------
     def fetch(self, url: str) -> FetchResult:
