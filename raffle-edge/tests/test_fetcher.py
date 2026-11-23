@@ -116,3 +116,18 @@ def test_html_robots_treated_as_absent(conn, tmp_path):
     f, _, _ = make(conn, tmp_path, pages)
     assert f.fetch("https://x.test/a").ok
     assert "HTML" in f.robots_notes["https://x.test"]
+
+
+def test_policy_blocked_host_gets_no_requests_at_all(conn, tmp_path):
+    from raffle_edge.collector.fetcher import PoliteFetcher
+    calls = []
+
+    def transport(url, headers, timeout):
+        calls.append(url)
+        return HttpResponse(200, b"x")
+
+    f = PoliteFetcher(conn, tmp_path, transport=transport, min_delay_s=0,
+                      policy_blocked_hosts={"https://x.test": "terms forbid AI tools"})
+    r = f.fetch("https://x.test/winners")
+    assert r.outcome == "skipped" and "terms" in r.note
+    assert calls == []  # not even robots.txt

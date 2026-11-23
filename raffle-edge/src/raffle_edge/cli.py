@@ -21,6 +21,12 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = ROOT / "data" / "db" / "raffle_edge.sqlite"
 DEFAULT_SEED = ROOT / "data" / "seed" / "platforms.json"
 DEFAULT_RAW = ROOT / "data" / "raw"
+DEFAULT_BLOCKLIST = ROOT / "data" / "seed" / "collection_blocklist.json"
+
+
+def _fetcher(conn, args) -> PoliteFetcher:
+    blocked = json.loads(DEFAULT_BLOCKLIST.read_text(encoding="utf-8"))["hosts"] if DEFAULT_BLOCKLIST.exists() else {}
+    return PoliteFetcher(conn, args.raw, min_delay_s=args.delay, policy_blocked_hosts=blocked)
 
 
 def _conn(args):
@@ -66,7 +72,7 @@ def cmd_probe(args) -> int:
     if not chosen:
         print("no platforms selected (give slugs or --all)", file=sys.stderr)
         return 2
-    fetcher = PoliteFetcher(conn, args.raw, min_delay_s=args.delay)
+    fetcher = _fetcher(conn, args)
     for p in chosen:
         for r in probe_platform(conn, fetcher, p):
             print(f"{p.slug:24} {r['target']:9} {r['outcome']:19} {r['http_status'] or '-':>4}  {r['note'] or ''}")
@@ -79,7 +85,7 @@ def cmd_fetch(args) -> int:
     import re
 
     conn = _conn(args)
-    fetcher = PoliteFetcher(conn, args.raw, min_delay_s=args.delay)
+    fetcher = _fetcher(conn, args)
     out = Path(args.text_dir) if args.text_dir else None
     if out:
         out.mkdir(parents=True, exist_ok=True)

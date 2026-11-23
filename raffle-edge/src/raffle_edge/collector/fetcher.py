@@ -124,6 +124,7 @@ class PoliteFetcher:
         timeout_s: float = 20.0,
         clock: Callable[[], float] = time.monotonic,
         sleep: Callable[[float], None] = time.sleep,
+        policy_blocked_hosts: dict[str, str] | None = None,
     ) -> None:
         self.conn = conn
         self.raw_dir = Path(raw_dir)
@@ -136,6 +137,9 @@ class PoliteFetcher:
         self._robots: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         self._last_hit: dict[str, float] = {}
         self._blocked_hosts: dict[str, str] = {}
+        # Hosts whose terms forbid our kind of access. Checked before robots.txt,
+        # so not even robots.txt is requested from them.
+        self.policy_blocked_hosts = dict(policy_blocked_hosts or {})
         self._host_delay: dict[str, float] = {}
         self.robots_notes: dict[str, str] = {}
 
@@ -193,6 +197,8 @@ class PoliteFetcher:
     # -- robots ---------------------------------------------------------------
     def robots_for(self, url: str) -> urllib.robotparser.RobotFileParser | None:
         host = self._host(url)
+        if host in self.policy_blocked_hosts:
+            return None
         if host in self._robots:
             return self._robots[host]
         robots_url = f"{host}/robots.txt"
@@ -247,6 +253,11 @@ class PoliteFetcher:
     # -- public ---------------------------------------------------------------
     def fetch(self, url: str) -> FetchResult:
         host = self._host(url)
+        if host in self.policy_blocked_hosts:
+            reason = "terms of use forbid automated/AI access: " + self.policy_blocked_hosts[host]
+            sid = self._record(url, "skipped", False, None, reason[:500])
+            log.info("not fetching %s: %s", url, reason)
+            return FetchResult(url, "skipped", None, None, sid, reason)
         if host in self._blocked_hosts:
             sid = self._record(url, "skipped", False, None, f"host disabled this run: {self._blocked_hosts[host]}")
             return FetchResult(url, "skipped", None, None, sid, self._blocked_hosts[host])

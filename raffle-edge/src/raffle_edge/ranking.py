@@ -68,8 +68,12 @@ def _claimed_values(conn: sqlite3.Connection, slug: str, basis: str) -> dict[str
         "SELECT topic, value FROM current_claims WHERE platform_slug=? AND evidence_level IN (%s)"
         % ",".join("?" for _ in levels)
     )
-    for r in conn.execute(q, (slug, *levels)):
-        out.setdefault(r["topic"], set()).add((r["value"] or "").strip().lower())
+    by_level: dict[str, dict[str, set[str]]] = {}
+    for r in conn.execute(q.replace("SELECT topic, value", "SELECT topic, value, evidence_level"), (slug, *levels)):
+        by_level.setdefault(r["topic"], {}).setdefault(r["evidence_level"], set()).add((r["value"] or "").strip().lower())
+    for topic, lv in by_level.items():
+        # A confirmed claim overrides any provisional claim on the same topic.
+        out[topic] = lv.get("A_CONFIRMED") or lv.get("P_PROVISIONAL", set())
     return out
 
 

@@ -1,0 +1,8 @@
+{
+  "_comment": "Hosts this project must not access with automated or AI-driven tools, with the reason. The fetcher refuses them before any network request. Manual human reading only.",
+  "hosts": {
+    "https://www.botb.com": "BOTB T&Cs (30-01-2026) prohibit using 'any artificial intelligence tools when accessing the Services or data mining or extraction methods intended to scrape or extract data'. Found 2026-11-23.",
+    "https://botb.com": "Same operator and terms as www.botb.com.",
+    "https://cdn.botb.com": "Same operator and terms as www.botb.com."
+  }
+}
