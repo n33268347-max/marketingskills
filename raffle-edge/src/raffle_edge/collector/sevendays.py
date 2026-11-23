@@ -16,6 +16,8 @@ import json
 import logging
 import sqlite3
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 
 from ..db.database import ensure_competition, ensure_platform, insert, transaction
 from .fetcher import PoliteFetcher
@@ -141,10 +143,8 @@ DETAIL = BASE + "/api/v2/raffle-draw/{slug}/GBP?include_finished=true"
 
 def _pence(v) -> int | None:
     try:
-        from decimal import Decimal
-
         return int((Decimal(str(v)) * 100).to_integral_value())
-    except Exception:
+    except (InvalidOperation, ValueError, TypeError):
         return None
 
 
@@ -157,6 +157,9 @@ def parse_detail(d: dict) -> dict:
     cash_total = (sum(_pence(p.get("cashAlternative")) or 0 for p in end_prizes) if end_prizes
                   else ((_pence(d.get("cash_alternative")) or 0) * count if d.get("cash_alternative") is not None else None))
     advertised = _pence(d.get("prize_value"))
+    if d.get("is_cash") and not cash_total and advertised is not None:
+        # A cash prize has no separate "cash alternative": its cash value is the prize itself.
+        cash_total = advertised * count
     return {
         "ticket_price_pence": _pence(single["price"]) if single else None,
         "max_tickets": d.get("max_entries"),
@@ -171,8 +174,6 @@ def parse_detail(d: dict) -> dict:
 
 
 def collect_details(conn: sqlite3.Connection, fetcher: PoliteFetcher, slugs: list[str]) -> dict:
-    from ..db.database import insert as _insert
-
     done, errors = 0, []
     for slug in slugs:
         url = DETAIL.format(slug=slug)
@@ -191,9 +192,9 @@ def collect_details(conn: sqlite3.Connection, fetcher: PoliteFetcher, slugs: lis
         is_cash = v.pop("is_cash_prize")
         with transaction(conn):
             cid = ensure_competition(conn, PLATFORM, slug, slug)
-            _insert(conn, "competition_observations", {
+            insert(conn, "competition_observations", {
                 "competition_id": cid,
-                "observed_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "observed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "snapshot_id": res.snapshot_id,
                 "source_url": f"{BASE}/competition/{slug}",
                 "tickets_sold_basis": "disclosed_count" if v["tickets_sold"] is not None else "not_disclosed",
@@ -203,3 +204,33 @@ def collect_details(conn: sqlite3.Connection, fetcher: PoliteFetcher, slugs: lis
             })
         done += 1
     return {"requested": len(slugs), "stored": done, "errors": errors}
+
+
+def reparse_observations(conn: sqlite3.Connection, raw_dir) -> int:
+    """Re-derive value inputs from archived snapshots after a parser fix.
+
+    Never edits history: inserts a superseding observation only where the
+    re-parsed values differ from the current one.
+    """
+    from pathlib import Path
+
+    fields = ("ticket_price_pence", "max_tickets", "tickets_sold", "advertised_value_pence",
+              "cash_alternative_pence", "number_of_prizes", "max_entries_per_person")
+    rows = conn.execute(
+        """SELECT o.*, s.content_path FROM latest_observations o JOIN competitions c ON c.id=o.competition_id
+           JOIN snapshots s ON s.id=o.snapshot_id WHERE c.platform_slug=? AND s.content_path IS NOT NULL""",
+        (PLATFORM,),
+    ).fetchall()
+    fixed = 0
+    for r in rows:
+        v = parse_detail(json.loads((Path(raw_dir) / r["content_path"]).read_text(encoding="utf-8")))
+        v.pop("is_cash_prize")
+        if all(v[f] == r[f] for f in fields):
+            continue
+        row = {k: r[k] for k in r.keys() if k not in ("id", "content_path")}
+        row.update({f: v[f] for f in fields})
+        row["supersedes_id"] = r["id"]
+        with transaction(conn):
+            insert(conn, "competition_observations", row)
+        fixed += 1
+    return fixed

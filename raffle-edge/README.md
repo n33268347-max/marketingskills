@@ -2,20 +2,25 @@
 
 Evidence-first research tooling for UK online prize competitions. The question it asks: is there a legitimate, measurable statistical or value advantage anywhere? A null answer is an acceptable result.
 
-**Status:** Phase 1 prototype. See [docs/PHASE1_REPORT.md](docs/PHASE1_REPORT.md) and [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md).
+**Status:** Phases 1–1b complete; Phase 2–5 modules built and running on 7days Performance. See [docs/PHASE1_REPORT.md](docs/PHASE1_REPORT.md) and [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md).
 
 ## Quick start
 
 ```bash
 cd raffle-edge
 pip install -e '.[dev]'            # or: export PYTHONPATH=src
-python -m pytest -q                # 27 tests
+python -m pytest -q                # full test suite
 raffle-edge load-registry          # validate seed, append new claims to data/db/raffle_edge.sqlite
-raffle-edge rank                   # provisional ranking (use --basis confirmed for strict)
+raffle-edge rank --basis confirmed # ranking from directly confirmed claims only
 raffle-edge report                 # writes docs/generated/*.md
 raffle-edge probe --all            # robots-respecting probe (needs network access to the platforms)
 raffle-edge extract page.html      # parse a saved page; --store to record an observation
 raffle-edge import-draws data/templates/draw_results_template.csv
+raffle-edge fetch URL --text-dir out/      # archive any page politely (blocklist + robots enforced)
+raffle-edge merge-verified claims.json     # quote-check claims against archived pages
+raffle-edge collect 7days-performance      # public draw-results feed (names dropped)
+raffle-edge collect 7days-performance --details-sample 200   # value inputs, random sample
+raffle-edge analyze 7days-performance --record               # H8 audit, H3-H5 tests, walk-forward, H1
 ```
 
 ## Principles

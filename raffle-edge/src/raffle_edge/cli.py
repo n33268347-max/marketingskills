@@ -110,6 +110,11 @@ def cmd_collect(args) -> int:
     if args.platform == "7days-performance":
         from .collector.sevendays import collect
 
+        if args.reparse:
+            from .collector.sevendays import reparse_observations
+
+            print(f"{reparse_observations(conn, args.raw)} observations superseded after re-parse")
+            return 0
         if args.details_sample:
             import random
 
@@ -138,7 +143,7 @@ def cmd_analyze(args) -> int:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "ANALYSIS_7DAYS.md"
-    path.write_text(build(_conn(args), sims=args.sims), encoding="utf-8")
+    path.write_text(build(_conn(args), sims=args.sims, record=args.record), encoding="utf-8")
     print(f"wrote {path}")
     return 0
 
@@ -208,12 +213,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--raw", default=str(DEFAULT_RAW))
     p.add_argument("--delay", type=float, default=10.0)
     p.add_argument("--max-pages", type=int)
+    p.add_argument("--reparse", action="store_true", help="re-derive stored observations from archived snapshots")
     p.add_argument("--details-sample", type=int, help="fetch value inputs for N randomly sampled finished competitions")
     p.add_argument("--seed", type=int, default=20261123, help="sampling seed (recorded for reproducibility)")
     p.set_defaults(fn=cmd_collect)
     p = sub.add_parser("analyze", help="run integrity analysis and write a report")
     p.add_argument("platform")
     p.add_argument("--sims", type=int, default=2000)
+    p.add_argument("--record", action="store_true", help="append hypothesis runs to the ledger")
     p.add_argument("--out", default=str(ROOT / "docs" / "generated"))
     p.set_defaults(fn=cmd_analyze)
     p = sub.add_parser("merge-verified", help="quote-check claim files and merge into verified_claims.json")

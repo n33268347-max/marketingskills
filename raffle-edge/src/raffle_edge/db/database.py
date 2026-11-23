@@ -33,13 +33,11 @@ def connect(path: str | Path) -> sqlite3.Connection:
 def init_schema(conn: sqlite3.Connection) -> None:
     sql = resources.files("raffle_edge.db").joinpath("schema.sql").read_text(encoding="utf-8")
     head, sep, tail = sql.partition("CREATE UNIQUE INDEX IF NOT EXISTS ux_draws_external")
-    try:
-        conn.executescript(head)
-        _migrate(conn)
-        if sep:
-            conn.executescript(sep + tail)
-    except sqlite3.OperationalError:
-        raise
+    # The unique index references migrated columns, so it runs after _migrate().
+    conn.executescript(head)
+    _migrate(conn)
+    if sep:
+        conn.executescript(sep + tail)
     conn.execute(
         "INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('schema_version', ?)",
         (SCHEMA_VERSION,),

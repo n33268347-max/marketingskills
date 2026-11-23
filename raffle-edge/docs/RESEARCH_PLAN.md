@@ -24,14 +24,14 @@ Every hypothesis is pre-registered here before data is examined. Failed hypothes
 
 | ID | Hypothesis | Type | Data needed | Test | Status |
 |---|---|---|---|---|---|
-| H1 | Some competitions that draw regardless of sell-out close with EV per ticket > price | Value | prize value, ticket price, **final tickets sold**, max tickets | Exact EV per competition; share with EV > price; CI by bootstrap over competitions | Open, needs Phase 2 data |
+| H1 | Some competitions that draw regardless of sell-out close with EV per ticket > price | Value | prize value, ticket price, **final tickets sold**, max tickets | Exact EV per competition; share with EV > price; Wilson CI | Ex-post analysis running on 7days (see ANALYSIS_7DAYS.md); forward test pending |
 | H2 | Instant-win competitions with publicly listed remaining winning numbers have time-varying EV that sometimes exceeds the price | Value | remaining prize list, tickets remaining, over time | EV trajectory; prevalence of EV > price | Open |
-| H3 | Winning ticket positions are uniform on the eligible range (null) | Integrity | winning number, range, **allocation method** | χ² on normalised positions, KS, runs test, endpoint test | Open, expected to hold |
-| H4 | Endpoint tickets (min/max) win at the expected 1/N rate | Integrity (off-by-one) | as H3 | Binomial test pooled across draws | Open |
+| H3 | Winning ticket positions are uniform on the eligible range (null) | Integrity | winning number, range, **allocation method** | χ² on normalised positions, KS, runs test, endpoint test | 7days: no deviation detected (n=766) |
+| H4 | Endpoint tickets (min/max) win at the expected 1/N rate | Integrity (off-by-one) | as H3 | Separate min/max binomial tests pooled across draws | 7days: 0 endpoint hits vs 0.59 expected; no evidence either way (low power) |
 | H5 | Draw-to-draw winning positions are independent | Integrity | ordered series per platform | Lag-k autocorrelation, Ljung–Box, permutation test | Open |
 | H6 | The free postal route has higher EV per £ than paid entry on low-price competitions | Value | stamp cost, entries per postcard, ticket price | Arithmetic | Open; legal to report, never automated |
 | H7 | Advertised prize values exceed independently verified market values | Value accuracy | advertised value, cash alternative, market comparables | Paired ratio with CI | Open |
-| H8 | 7days' published seed/index/entry count reproduce each past automated draw (Mersenne Twister, time seed, per operator) | Integrity / audit | published seed, index, entries, winning ticket | Exact reproduction rate; any mismatch → disclosure | Open. Past draws only; no prediction. |
+| H8 | 7days' published seed/index/entry count reproduce each past automated draw (Mersenne Twister, time seed, per operator) | Integrity / audit | published seed, index, entries, winning ticket | Exact reproduction rate; any mismatch → disclosure | 302/302 reproduce up to 3 Aug 2026; 1/464 after (method changed). Enquiry drafted. |
 
 ## 3. Research targets: the first ten platforms
 

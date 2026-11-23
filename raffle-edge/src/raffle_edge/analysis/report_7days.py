@@ -15,7 +15,7 @@ def _fmt_p(p: float) -> str:
     return f"{p:.4f}" if p >= 1e-4 else f"{p:.1e}"
 
 
-def build(conn: sqlite3.Connection, sims: int = 2000) -> str:
+def build(conn: sqlite3.Connection, sims: int = 2000, record: bool = False, split_at: str = "2026-09-01") -> str:
     counts = conn.execute(
         """SELECT d.draw_type, COUNT(*) FROM current_draw_results d JOIN competitions c ON c.id=d.competition_id
            WHERE c.platform_slug='7days-performance' GROUP BY d.draw_type"""
@@ -65,7 +65,7 @@ def build(conn: sqlite3.Connection, sims: int = 2000) -> str:
     ).fetchall()
     if len(rows) < 30:
         lines.append(f"Insufficient data ({len(rows)} draws).")
-        return "\n".join(lines) + "\n"
+        return "\n".join(lines) + "\n" + _h1(conn)
     pos = np.array([r[0] for r in rows])
     ns = np.array([r[1] for r in rows])
     lines += [
@@ -86,4 +86,44 @@ def build(conn: sqlite3.Connection, sims: int = 2000) -> str:
         "- **Independent validation:** not yet done. A significant result must be re-tested on draws collected after this report (a hold-out) before it counts as a finding.",
         "- A historical pattern is not evidence of future predictability.",
     ]
-    return "\n".join(lines) + "\n"
+    lines += ["", _walkforward(conn, rows_dates(conn), pos, ns, split_at, record)]
+    return "\n".join(lines) + "\n\n" + _h1(conn)
+
+
+def rows_dates(conn):
+    return [r[0] for r in conn.execute(
+        """SELECT d.drawn_at FROM current_draw_results d JOIN competitions c ON c.id=d.competition_id
+           WHERE c.platform_slug='7days-performance' AND d.draw_type='automated'
+             AND d.rng_index IS NOT NULL AND d.rng_entries > 0 ORDER BY d.drawn_at""")]
+
+
+def _walkforward(conn, dates, pos, ns, split_at, record) -> str:
+    from ..backtest.walkforward import decile_strategy, record as rec
+
+    r = decile_strategy(dates, pos, ns, split_at)
+    if record:
+        rec(conn, r, "7days-performance", "7days automated draws, public feed")
+    return "\n".join([
+        "## Phase 5: walk-forward test of a \"hot decile\" pattern",
+        "",
+        f"Training window: draws before {split_at} (n={r.n_train}). Test window: from {split_at} (n={r.n_test}).",
+        f"Most frequent winning decile in training: decile {r.chosen_decile}, hit rate {r.train_rate:.1%} (baseline ≈{r.baseline:.1%}).",
+        f"Test-window hit rate: **{r.test_rate:.1%}** (95% CI {r.ci[0]:.1%}–{r.ci[1]:.1%}); one-sided binomial p = {r.p_value:.3f}.",
+        f"Outcome: **{r.outcome.replace('_', ' ')}**. The in-sample 'pattern' {'held' if r.outcome == 'supported' else 'did not hold'} out of sample.",
+        "",
+        "Even a supported result would not be actionable here: 7days allocates ticket numbers randomly, so entrants cannot choose a list position.",
+        "",
+    ])
+
+
+def _h1(conn: sqlite3.Connection) -> str:
+    from .h1_value import load, summary_markdown
+
+    vals = load(conn)
+    total = conn.execute(
+        """SELECT COUNT(DISTINCT c.id) FROM competitions c JOIN draw_results d ON d.competition_id=c.id
+           WHERE c.platform_slug='7days-performance' AND d.draw_type='automated'"""
+    ).fetchone()[0]
+    note = (f"Random sample (seed 20261123) of finished automated-draw competitions: {len(vals)} with complete value "
+            f"inputs, out of {total} in the archive.")
+    return summary_markdown(vals, note)

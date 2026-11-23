@@ -205,5 +205,32 @@ WHERE o.id = (
     ORDER BY o2.observed_at DESC, o2.id DESC LIMIT 1
 );
 
+-- Ledger of every hypothesis test run, successful or not (Phase 5).
+CREATE TABLE IF NOT EXISTS hypothesis_runs (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    hypothesis_id   TEXT NOT NULL,          -- e.g. 'H3', 'H1-forward'
+    run_at          TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    platform_slug   TEXT,
+    method          TEXT NOT NULL,
+    train_period    TEXT,
+    test_period     TEXT,
+    n_train         INTEGER,
+    n_test          INTEGER,
+    metric          TEXT NOT NULL,
+    train_value     REAL,
+    test_value      REAL,
+    baseline_value  REAL,
+    p_value         REAL,
+    ci_low          REAL,
+    ci_high         REAL,
+    outcome         TEXT NOT NULL CHECK (outcome IN ('supported','not_supported','inconclusive')),
+    code_version    TEXT,
+    notes           TEXT
+);
+CREATE TRIGGER IF NOT EXISTS trg_hruns_no_update BEFORE UPDATE ON hypothesis_runs
+BEGIN SELECT RAISE(ABORT, 'hypothesis_runs is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS trg_hruns_no_delete BEFORE DELETE ON hypothesis_runs
+BEGIN SELECT RAISE(ABORT, 'hypothesis_runs is append-only'); END;
+
 CREATE UNIQUE INDEX IF NOT EXISTS ux_draws_external ON draw_results(competition_id, external_result_id)
     WHERE external_result_id IS NOT NULL AND supersedes_id IS NULL;

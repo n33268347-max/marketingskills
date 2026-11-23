@@ -42,3 +42,11 @@ def test_parse_detail_value_inputs():
     assert v["ticket_price_pence"] == 39 and v["cash_alternative_pence"] == 20000 and v["advertised_value_pence"] == 27000
     assert v["max_tickets"] == 1299 and v["tickets_sold"] == 1278
     assert "Person" not in repr(v)
+
+
+def test_cash_prize_value_is_its_cash_value():
+    from raffle_edge.collector.sevendays import parse_detail
+    v = parse_detail({"prize_value": 1000, "is_cash": True, "cash_alternative": None, "prize_count": 1,
+                      "end_prizes": [], "offers": [{"price": 0.02, "tickets_quantity": 1}],
+                      "max_entries": 94999, "current_entries": 94999})
+    assert v["cash_alternative_pence"] == 100000 and v["advertised_value_pence"] == 100000
