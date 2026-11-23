@@ -1,0 +1,1125 @@
+{
+  "meta": {
+    "compiled_on": "2026-11-23",
+    "method": "Desk research via web search snippets; direct operator page reads blocked by sandbox network policy.",
+    "evidence_note": "No claim is A_CONFIRMED. All P_PROVISIONAL claims require a direct read + archived snapshot before promotion."
+  },
+  "platforms": [
+    {
+      "slug": "7days-performance",
+      "name": "7days Performance",
+      "base_url": "https://7daysperformance.co.uk",
+      "results_url": "https://7daysperformance.co.uk/draw-result/",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "7days Performance Limited, company 11215119 (business directory listing; not checked at Companies House).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "Standard draws (live and automatic), instant wins with end prize, spins, coin-drop, free daily instant wins.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "yes",
+          "statement": "Competition pages show sold/total, e.g. '37,999 / 37,999'.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk/product/win-1-000-tax-free-cash-67",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "Sold: 100%, 37,999 / 37,999",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "yes",
+          "statement": "Tickets sold out of cap shown, including on finished competitions.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk/product/win-1-000-tax-free-cash-67",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Per-competition /draw-result/ pages exist; snippets show results back to at least Jan 2026.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk/draw-result/prize-every-time-instant-win-4-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "yes",
+          "statement": "Result pages show winning ticket, draw date/time and auto/live flag.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk/draw-result/prize-every-time-instant-win-4-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "ticket_allocation",
+          "value": "random_assigned",
+          "statement": "Ticket numbers are randomly generated after payment.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "Ticket numbers are randomly generated once you make your payment",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "auto_draw_or_live",
+          "statement": "End prize decided by an auto-draw system, or a live draw; draw takes place regardless of tickets sold.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Live draws re-watchable on YouTube and Facebook.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "yes",
+          "statement": "A page states 'Independently Certified by GLI'. Certificate scope not seen; GLI certification is of a system, not per-draw supervision.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "Independently Certified by GLI",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "instant_wins",
+          "value": "predetermined",
+          "statement": "Instant-win outcomes predetermined by a random process; matching allocated ticket numbers win.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "All outcomes are predetermined, using a random process",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "free_entry_route",
+          "value": "yes",
+          "statement": "Free postal entry via unenclosed postcard.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://7daysperformance.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "notes",
+          "value": null,
+          "statement": "A Trustpilot reviewer alleges a time-seeded Mersenne Twister RNG. Unverified; do NOT treat as fact. Testable only indirectly via outcome distributions.",
+          "evidence_level": "C_HYPOTHESIS",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "elite-competitions",
+      "name": "Elite Competitions",
+      "base_url": "https://elitecompetitions.co.uk",
+      "results_url": "https://elitecompetitions.co.uk/all-winners",
+      "terms_url": "https://elitecompetitions.co.uk/tnc",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Hydro Solutions Fylde Ltd (09612888), Blackpool; corroborated by ASA rulings naming that company for Elite.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://asa.org.uk/rulings/hydro-solutions-fylde-ltd-G19-1023824.html",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "End-prize draws, 'InstaWins', Elite Club monthly draws.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/competitions/past/every-tickets-a-winner-pound1000-end-prize-4999x-instawins-110400",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "All-winners page and per-competition pages under /competitions/past/.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/all-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "yes",
+          "statement": "Winners page shows winner, ticket number and draw date.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/all-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "yes",
+          "statement": "Past competition pages show entry totals (e.g. 4,999 entries).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/competitions/past/every-tickets-a-winner-pound1000-end-prize-4999x-instawins-110400",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "unknown",
+          "statement": "Whether actual tickets sold (vs cap) is shown is not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "random_ball_machine",
+          "statement": "Live draw using a 'verified random ball selector'; T&Cs refer to a 'random ball machine' for end prizes; draws regardless of sales.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/how-to-play",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Draws streamed on YouTube and Facebook.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/how-to-play",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "'Verified' is not explained; no independent party named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "ticket_allocation",
+          "value": "unknown",
+          "statement": "Not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "free_entry_route",
+          "value": "yes",
+          "statement": "Free open postcard route; capped at 2,500 postal entries per Elite Club draw.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://elitecompetitions.co.uk/tnc",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "regulatory_history",
+          "value": null,
+          "statement": "ASA rulings (2019) against Hydro Solutions Fylde Ltd: free entry route not clear/prominent; CAP 1.7 non-response; referred to CAP Compliance.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.asa.org.uk/rulings/hydro-solutions-fylde-ltd-g19-1044086-hydro-solutions-fylde-ltd.html",
+          "source_kind": "regulator",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "rev-comps",
+      "name": "Rev Comps",
+      "base_url": "https://www.revcomps.com",
+      "results_url": "https://www.revcomps.com/past-entry-lists",
+      "terms_url": "https://www.revcomps.com/terms-conditions",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Promoter reported as Rev Competitions Limited (Gibraltar), linked to UK Rev Corp Ltd.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/terms-conditions",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "Live draws, auto-draws, free bonus draw.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/entry-free/",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Past entry lists archive (lists for competitions before 1 April 2026 noted there).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/past-entry-lists",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "yes",
+          "statement": "Entry lists show total tickets per draw (e.g. 1,999 total).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/past-entry-lists",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "yes",
+          "statement": "Entry lists show sold and remaining (e.g. 1,265 sold of 1,999).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/past-entry-lists",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "unknown",
+          "statement": "Whether the archive shows the winning ticket number is not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "ball_machine_or_algorithm",
+          "statement": "Live draws use ball machines; auto-draws use a 'random algorithm'; drawn regardless of sell-out.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/faqs",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Draws streamed on Facebook, Instagram, YouTube.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.revcomps.com/faqs",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "No independent party named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "ticket_allocation",
+          "value": "unknown",
+          "statement": "Not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "click-competitions",
+      "name": "Click Competitions",
+      "base_url": "https://www.clickcompetitions.co.uk",
+      "results_url": "https://www.clickcompetitions.co.uk/draw-results",
+      "terms_url": "https://www.clickcompetitions.co.uk/legal/terms-and-conditions",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Click Competitions Limited, Companies House 12550861, Norwich (Companies House search snippet).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/12550861",
+          "source_kind": "regulator",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "Skill-question draws, live and automatic draws, instant wins with end prizes, free competitions.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/legal/terms-and-conditions",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Draw results pages for main draws and instant wins.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/draw-results",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "yes",
+          "statement": "Results list winner name and ticket number.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/draw-results",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "yes",
+          "statement": "Ticket caps published per competition (e.g. 249,999).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "yes",
+          "statement": "Company states it publicly displays all entry lists prior to the draw at /entry-lists/ (company reply on Trustpilot; contents not seen).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/entry-lists/",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "ticket_allocation",
+          "value": "assigned_on_entry",
+          "statement": "T&Cs 16.5: a number is produced for each entry once made; random vs sequential not stated.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/legal/terms-and-conditions",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "certified_rng",
+          "statement": "Drawn using certified random number generator software, live or automated.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/legal/terms-and-conditions",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "drawn by using a certified random number generator software",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Live draws on Facebook on set weekdays; others are autodraws.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "RNG described as 'certified' but no certifier named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "instant_wins",
+          "value": "predetermined",
+          "statement": "Instant-win winning entries randomly selected before the competition goes live.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.clickcompetitions.co.uk/legal/terms-and-conditions",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "lucky-day-competitions",
+      "name": "Lucky Day Competitions",
+      "base_url": "https://www.luckydaycompetitions.com",
+      "results_url": "https://www.luckydaycompetitions.com/past-winners/",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Ace Competitions Ltd t/a Lucky Day Competitions, NI659574, Newry.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "Main draws, instant wins incl. 'Every Ticket Wins', auto draws.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Past-winners pages (27+ pages) and per-date /draw_results/<date>/ pages.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com/past-winners/",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "yes",
+          "statement": "Per-date results list prize, winner and winning ticket number; no tickets sold or price shown.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com/past-winners/",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "unknown",
+          "statement": "Not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "unknown",
+          "statement": "Not shown on results pages; elsewhere not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "google_rng_live_or_auto",
+          "statement": "Pages say draws are videoed live on Facebook using Google's random number generator; T&Cs say auto draws are system-selected. Descriptions inconsistent.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Draws videoed live on Facebook.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "No independent party named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "free_entry_route",
+          "value": "yes",
+          "statement": "Postal route to Newry address; tickets cheaper than a stamp earn multiple entries.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.luckydaycompetitions.com",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "dream-car-giveaways",
+      "name": "Dream Car Giveaways",
+      "base_url": "https://dreamcargiveaways.co.uk",
+      "results_url": "https://dreamcargiveaways.co.uk/competition-winners/",
+      "terms_url": "https://dreamcargiveaways.co.uk/terms-conditions",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Registered number 11320154; reported owned by Jumbo Interactive since Oct 2025 (third party).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "Standard draws, instant wins (Golden Ticket, Ticket Hoops, Chase The Ace), automated draws, Spin to Win LIVE.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/competitions/instant-wins",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "yes",
+          "statement": "Terms: maximum entries will be stated on the website (e.g. 'Only 9999 Entries').",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/terms-conditions",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "The maximum number entries to a Competition will be stated on the Website",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "yes",
+          "statement": "FAQ: full entry list published after close. (Second researcher could not confirm sold counts on past draws.)",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/faqs/draws-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Winners and past-competition pages exist (/competition-winners/, also reported /winners).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/competition-winners/",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "yes",
+          "statement": "Closed competition pages show the winning number.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/competition-winners/",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "php_random_int",
+          "statement": "Automated draws picked 'randomly, using PHP's random_int'.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "google_rng_live",
+          "statement": "Another page: draws videoed LIVE on Facebook using Google's random number generator. Conflicts with the random_int statement; may describe different draw types or eras.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/faqs/draws-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "yes",
+          "statement": "Live draws with presenter on Draws page, Facebook or YouTube.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/faqs/draws-winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "No independent party named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "instant_wins",
+          "value": "predetermined_visible",
+          "statement": "Instant prizes allocated at random to numbers in a spreadsheet; pages list winning numbers as 'already won' / 'still available'.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://dreamcargiveaways.co.uk/competitions/instant-wins",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "yes",
+          "statement": "Named by CMS law-firm update as an early backer of the Code (not checked on GOV.UK list).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cms.law/en/gbr/legal-updates/dcms-publishes-voluntary-code-of-good-practice-for-prize-draw-operators",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "notes",
+          "value": null,
+          "statement": "Visible pre-allocated instant-win numbers mean the remaining instant-win prize pool is observable; expected value of an instant-win ticket can then be computed from public data (Phase 3).",
+          "evidence_level": "C_HYPOTHESIS",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "botb",
+      "name": "BOTB (Best of the Best)",
+      "base_url": "https://www.botb.com",
+      "results_url": "https://www.botb.com/winners",
+      "terms_url": "https://cdn.botb.com/media/v14domvf/botb-tcs-30-01-2026.pdf",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Company 03755182 (T&Cs); part of Winvia Entertainment (AIM-listed).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cdn.botb.com/media/v14domvf/botb-tcs-30-01-2026.pdf",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": "spot_the_ball_and_draws",
+          "statement": "Dream Car is spot-the-ball (judged skill game); also instant wins and random prize draws.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.botb.com/how-to-play",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "judged_spot_the_ball",
+          "statement": "Ball position set by an independent panel of judges in the presence of a qualified lawyer; closest coordinate wins, calculated by PromoVeritas.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cdn.botb.com/media/v14domvf/botb-tcs-30-01-2026.pdf",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "promoveritas_rng",
+          "statement": "Other draws: drawn by an independent promotional verification service such as PromoVeritas using its certified RNG.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cdn.botb.com/media/v14domvf/botb-tcs-30-01-2026.pdf",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "yes",
+          "statement": "PromoVeritas and an independent lawyer named.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cdn.botb.com/media/v14domvf/botb-tcs-30-01-2026.pdf",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "yes",
+          "statement": "Weekly winners pages (e.g. /winners/dc4626) back to at least 2023.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.botb.com/winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_show_ticket_number",
+          "value": "not_applicable",
+          "statement": "Main game is spot-the-ball: there is no winning ticket number to test for uniformity.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.botb.com/winners",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "unknown",
+          "statement": "Not established; a third-party review says entry numbers are not published.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "unknown",
+          "statement": "T&Cs mention a 'Competition Entry Limit' without a figure.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "yes",
+          "statement": "Named as early backer of the Code.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://cms.law/en/gbr/legal-updates/dcms-publishes-voluntary-code-of-good-practice-for-prize-draw-operators",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "omaze-uk",
+      "name": "Omaze UK",
+      "base_url": "https://omaze.co.uk",
+      "terms_url": "https://omaze.co.uk/pages/official-rules-uk",
+      "claims": [
+        {
+          "topic": "formats",
+          "value": null,
+          "statement": "House prize draws, Monthly Millionaire, weekly subscriber cash draw, free Dream List draw.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.co.uk/pages/official-rules-uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "ticket_price_range",
+          "value": null,
+          "statement": "Entry bundles from £10; subscriptions £15/100, £25/200, £50/640 entries.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.co.uk/pages/faqs",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "internal_engine_gli_certified",
+          "statement": "Internal randomised draw engine certified by Gaming Labs (GLI); independent scrutineer Civica selected a winning entry code in at least one house draw.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.freshdesk.com/support/solutions/articles/103000157707",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "Our draw engine has been certified by Gaming Labs, Inc (GLI).",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "yes",
+          "statement": "Civica named as independent scrutineer for a house draw.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.co.uk/blogs/news/cheshire-house-winner-process",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "results_page",
+          "value": "unknown",
+          "statement": "Only per-draw 'winner process' blog posts found; no structured archive.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "discloses_tickets_sold",
+          "value": "unknown",
+          "statement": "FAQ only says 'typically millions of entries'.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "discloses_max_tickets",
+          "value": "no",
+          "statement": "No total-entries cap found; per-person spend cap £500/month (£250 credit card).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.co.uk/pages/official-rules-uk",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "free_entry_route",
+          "value": "yes",
+          "statement": "Postal entry route published.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://omaze.co.uk/pages/postal-entry-route",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "yes",
+          "statement": "Reported as a founding signatory.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.civilsociety.co.uk",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "regulatory_history",
+          "value": null,
+          "statement": "ASA ruling G20-1073875 (2020) upheld: free entry route not clear/prominent.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://www.asa.org.uk/rulings/omaze-inc-g20-1073875-omaze-inc.html",
+          "source_kind": "regulator",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "notes",
+          "value": null,
+          "statement": "Prize-draw with millions of entries and entry codes rather than bounded ticket numbers: winning-number uniformity tests are not feasible from public data. Value analysis only.",
+          "evidence_level": "C_HYPOTHESIS",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "raffall",
+      "name": "Raffall",
+      "base_url": "https://raffall.com",
+      "claims": [
+        {
+          "topic": "operator",
+          "value": null,
+          "statement": "Raffall Limited, 09930826 (third-party listing).",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://raffall.com",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "formats",
+          "value": "marketplace",
+          "statement": "Marketplace: individual hosts run raffles with their own prizes and rules.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://raffall.com",
+          "source_kind": "third_party",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "in_house_automated",
+          "statement": "All tickets entered into an automated draw where the system selects winners at random.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://help.raffall.com/hc/en-gb/articles/360015952479",
+          "source_kind": "primary_search_snippet",
+          "source_quote": "our system selects winners at random",
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "live_draw",
+          "value": "no",
+          "statement": "Manual or live-hosted draws are not possible; social broadcasts do not affect outcomes.",
+          "evidence_level": "P_PROVISIONAL",
+          "source_url": "https://help.raffall.com/hc/en-gb/articles/360018833999",
+          "source_kind": "primary_search_snippet",
+          "source_quote": null,
+          "accessed_on": "2026-11-23"
+        },
+        {
+          "topic": "independent_rng",
+          "value": "unknown",
+          "statement": "No certifier named.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "results_page",
+          "value": "unknown",
+          "statement": "No public results archive found; entrants notified by email.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "code_of_practice",
+          "value": "unknown",
+          "statement": "Signatory status not established.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    },
+    {
+      "slug": "raffle-house",
+      "name": "Raffle House",
+      "base_url": "https://rafflehouse.com",
+      "claims": [
+        {
+          "topic": "code_of_practice",
+          "value": null,
+          "statement": "Reported in search results as a Code signatory; source not pinned. Not researched further in Phase 1.",
+          "evidence_level": "C_HYPOTHESIS",
+          "source_kind": "none"
+        },
+        {
+          "topic": "winner_selection",
+          "value": "unknown",
+          "statement": "Not yet researched.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "results_page",
+          "value": "unknown",
+          "statement": "Not yet researched.",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        },
+        {
+          "topic": "robots_results_allowed",
+          "value": "unknown",
+          "statement": "robots.txt not yet fetched (sandbox network policy blocked the host).",
+          "evidence_level": "UNKNOWN",
+          "source_kind": "none"
+        }
+      ]
+    }
+  ]
+}
