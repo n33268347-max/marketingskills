@@ -32,8 +32,14 @@ def connect(path: str | Path) -> sqlite3.Connection:
 
 def init_schema(conn: sqlite3.Connection) -> None:
     sql = resources.files("raffle_edge.db").joinpath("schema.sql").read_text(encoding="utf-8")
-    conn.executescript(sql)
-    _migrate(conn)
+    head, sep, tail = sql.partition("CREATE UNIQUE INDEX IF NOT EXISTS ux_draws_external")
+    try:
+        conn.executescript(head)
+        _migrate(conn)
+        if sep:
+            conn.executescript(sep + tail)
+    except sqlite3.OperationalError:
+        raise
     conn.execute(
         "INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('schema_version', ?)",
         (SCHEMA_VERSION,),
@@ -45,6 +51,14 @@ def init_schema(conn: sqlite3.Connection) -> None:
 # Only ADD COLUMN is allowed: history is never rewritten.
 _ADDED_COLUMNS = {
     "claims": {"snapshot_sha256": "TEXT"},
+    "draw_results": {
+        "external_result_id": "TEXT",
+        "draw_type": "TEXT",
+        "rng_published_seed": "TEXT",
+        "rng_unix_time": "TEXT",
+        "rng_index": "INTEGER",
+        "rng_entries": "INTEGER",
+    },
 }
 
 

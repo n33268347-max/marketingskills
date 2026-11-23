@@ -105,6 +105,44 @@ def cmd_fetch(args) -> int:
     return 0
 
 
+def cmd_collect(args) -> int:
+    conn = _conn(args)
+    if args.platform == "7days-performance":
+        from .collector.sevendays import collect
+
+        if args.details_sample:
+            import random
+
+            from .collector.sevendays import collect_details
+
+            slugs = [r[0] for r in conn.execute(
+                """SELECT DISTINCT c.external_ref FROM competitions c JOIN draw_results d ON d.competition_id=c.id
+                   WHERE c.platform_slug='7days-performance' AND d.draw_type='automated'
+                     AND c.id NOT IN (SELECT competition_id FROM competition_observations)
+                   ORDER BY c.external_ref""")]
+            random.Random(args.seed).shuffle(slugs)
+            print(json.dumps(collect_details(conn, _fetcher(conn, args), slugs[: args.details_sample]), indent=2))
+            return 0
+        print(json.dumps(collect(conn, _fetcher(conn, args), max_pages=args.max_pages), indent=2))
+        return 0
+    print(f"no collector for {args.platform!r} yet", file=sys.stderr)
+    return 2
+
+
+def cmd_analyze(args) -> int:
+    if args.platform != "7days-performance":
+        print(f"no analysis for {args.platform!r} yet", file=sys.stderr)
+        return 2
+    from .analysis.report_7days import build
+
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    path = out / "ANALYSIS_7DAYS.md"
+    path.write_text(build(_conn(args), sims=args.sims), encoding="utf-8")
+    print(f"wrote {path}")
+    return 0
+
+
 def cmd_merge_verified(args) -> int:
     from .verify import merge_files
 
@@ -165,6 +203,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--delay", type=float, default=10.0)
     p.add_argument("--text-dir", help="write readable text of each page here")
     p.set_defaults(fn=cmd_fetch)
+    p = sub.add_parser("collect", help="run a platform collector (results feed)")
+    p.add_argument("platform")
+    p.add_argument("--raw", default=str(DEFAULT_RAW))
+    p.add_argument("--delay", type=float, default=10.0)
+    p.add_argument("--max-pages", type=int)
+    p.add_argument("--details-sample", type=int, help="fetch value inputs for N randomly sampled finished competitions")
+    p.add_argument("--seed", type=int, default=20261123, help="sampling seed (recorded for reproducibility)")
+    p.set_defaults(fn=cmd_collect)
+    p = sub.add_parser("analyze", help="run integrity analysis and write a report")
+    p.add_argument("platform")
+    p.add_argument("--sims", type=int, default=2000)
+    p.add_argument("--out", default=str(ROOT / "docs" / "generated"))
+    p.set_defaults(fn=cmd_analyze)
     p = sub.add_parser("merge-verified", help="quote-check claim files and merge into verified_claims.json")
     p.add_argument("files", nargs="+")
     p.add_argument("--raw", default=str(DEFAULT_RAW))

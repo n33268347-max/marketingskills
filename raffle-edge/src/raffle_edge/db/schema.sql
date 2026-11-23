@@ -141,6 +141,12 @@ CREATE TABLE IF NOT EXISTS draw_results (
     snapshot_id            INTEGER REFERENCES snapshots(id),
     recorded_at            TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     supersedes_id          INTEGER REFERENCES draw_results(id),
+    external_result_id     TEXT,      -- operator's own result id (dedupe key)
+    draw_type              TEXT,      -- 'automated' | 'live' | 'instant_win' | NULL
+    rng_published_seed     TEXT,      -- seed / commitment exactly as published
+    rng_unix_time          TEXT,      -- draw timestamp exactly as published
+    rng_index              INTEGER,   -- published winning position in the entry list
+    rng_entries            INTEGER,   -- published number of entries in the list
     CHECK (winning_ticket_number IS NULL OR ticket_range_min IS NULL OR winning_ticket_number >= ticket_range_min),
     CHECK (winning_ticket_number IS NULL OR ticket_range_max IS NULL OR winning_ticket_number <= ticket_range_max)
 );
@@ -198,3 +204,6 @@ WHERE o.id = (
       AND NOT EXISTS (SELECT 1 FROM competition_observations s WHERE s.supersedes_id = o2.id)
     ORDER BY o2.observed_at DESC, o2.id DESC LIMIT 1
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_draws_external ON draw_results(competition_id, external_result_id)
+    WHERE external_result_id IS NOT NULL AND supersedes_id IS NULL;
