@@ -24,7 +24,7 @@ Unit 6, The Iron Works, Dale Street, Accrington, Lancashire, BB5 0AP
 
 ## Safeguarding policy
 
-Accrington Lions Community Boxing Club C.I.C. is [an affiliated member of / applying to affiliate to] England Boxing. As such, it adopts the following Club Child Protection Policy, which is supported by and complements the England Boxing National Child Protection Policy. These policies are mandatory, and accepting them is a non-negotiable requirement of becoming a member of this club. Copies of the England Boxing Child Protection Policy are available from the England Boxing office on 0114 223 5654 or from www.englandboxing.org.
+Accrington Lions Community Boxing Club C.I.C. is an affiliated member of England Boxing. As such, it adopts the following Club Child Protection Policy, which is supported by and complements the England Boxing National Child Protection Policy. These policies are mandatory, and accepting them is a non-negotiable requirement of becoming a member of this club. Copies of the England Boxing Child Protection Policy are available from the England Boxing office on 0114 223 5654 or from www.englandboxing.org.
 
 - This club has a duty of care to children and young people (under 18 years of age), and their safety and welfare is paramount.
 - This club acknowledges that it has a legal and moral responsibility to ensure the wellbeing of children and young people within the club.
