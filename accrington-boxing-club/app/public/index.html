@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#b3221d">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lions Checklist">
+<title>Accrington Lions Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-width column of section cards, sticky progress bar on top, locked Submit at the end */
+:root{
+  --bg:#f6f4f3; --card:#ffffff; --fg:#1d1a19; --muted:#6b6360; --line:#e2dcda;
+  --accent:#b3221d; --accent-ink:#ffffff; --ok:#2e7d4f; --ok-bg:#e6f3ea; --warn-bg:#fdecea;
+  --field:#fbfaf9;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151312; --card:#1f1c1b; --fg:#f1ecea; --muted:#a59c98; --line:#363130;
+  --accent:#e0483f; --accent-ink:#ffffff; --ok:#5cc489; --ok-bg:#183024; --warn-bg:#3a1a18; --field:#191716; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151312; --card:#1f1c1b; --fg:#f1ecea; --muted:#a59c98; --line:#363130;
+  --accent:#e0483f; --accent-ink:#ffffff; --ok:#5cc489; --ok-bg:#183024; --warn-bg:#3a1a18; --field:#191716; color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+img{max-width:100%}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+header.top .wrap{padding-block:12px;display:grid;gap:8px}
+.brand{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.brand h1{font:700 1.45rem/1.1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0;text-wrap:balance}
+.brand .count{font:600 .95rem var(--body);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.intro{padding-block:18px 6px;display:grid;gap:10px}
+.intro p{margin:0}
+.note{background:var(--warn-bg);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.status{font-size:.85rem;color:var(--muted)}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:14px;overflow:hidden}
+section.card>button.head{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer}
+section.card>button.head:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.head h2{font:700 1.25rem/1.15 var(--display);text-transform:uppercase;letter-spacing:.03em;margin:0;flex:1}
+.pill{font:600 .8rem var(--body);padding:3px 10px;border-radius:999px;background:var(--line);color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.done{background:var(--ok-bg);color:var(--ok)}
+.chev{transition:transform .2s;color:var(--muted)}
+section.card.open .chev{transform:rotate(180deg)}
+.body{padding:0 16px 16px;display:grid;gap:18px}
+.body[hidden]{display:none}
+.sec-note{font-size:.92rem;color:var(--muted);margin:0}
+.item{display:grid;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0;padding-top:0}
+.q{display:flex;gap:10px;align-items:flex-start}
+.tick{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;margin-top:1px}
+.item.complete .tick{background:var(--ok);border-color:var(--ok)}
+.item.complete .tick::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.item.flag .tick{border-color:var(--accent)}
+.q label,.q .qt{font-weight:600}
+.hint{font-size:.88rem;color:var(--muted);margin:0 0 0 32px}
+.ctrl{margin-left:32px;display:grid;gap:8px;min-width:0}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--fg);background:var(--field);border:1.5px solid var(--line);border-radius:10px;padding:12px;min-height:48px}
+textarea{min-height:96px;resize:vertical}
+textarea:focus,input:focus{outline:none;border-color:var(--accent)}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices button{font:600 .95rem var(--body);padding:11px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--field);color:var(--fg);cursor:pointer;min-height:44px}
+.choices button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.choices button:focus-visible,.upl:focus-within,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.upl{display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--line);border-radius:10px;padding:14px;font-weight:600;cursor:pointer;min-height:56px;text-align:center}
+.upl input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.upl.busy{opacity:.6;pointer-events:none}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.thumb{position:relative;width:88px;height:88px;border-radius:8px;overflow:hidden;background:var(--line);display:grid;place-items:center;font-size:.75rem;text-align:center;padding:4px;color:var(--muted)}
+.thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.thumb button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:15px;line-height:26px;cursor:pointer;z-index:1}
+.skip{font-size:.9rem;display:flex;gap:8px;align-items:center}
+.skip input{width:20px;height:20px}
+.err{color:var(--accent);font-size:.88rem;margin:0}
+.ref{font-size:.88rem;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-x:auto}
+.ref table{border-collapse:collapse;width:100%}
+.ref td{padding:3px 8px 3px 0;vertical-align:top}
+.finish{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 16px;display:grid;gap:12px}
+.finish h2{font:700 1.35rem var(--display);text-transform:uppercase;letter-spacing:.03em;margin:0}
+.btn{font:700 1.05rem var(--body);padding:15px 18px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;min-height:52px}
+.btn[disabled]{background:var(--line);color:var(--muted);cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.done-box{background:var(--ok-bg);color:var(--ok);border-radius:10px;padding:14px;font-weight:600}
+.left-list{margin:0;padding-left:20px;font-size:.92rem;color:var(--muted)}
+.login{min-height:80vh;display:grid;place-items:center;padding-block:32px}
+.login form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 20px;display:grid;gap:14px;width:100%;max-width:380px}
+.login h1{font:700 1.8rem/1.05 var(--display);text-transform:uppercase;letter-spacing:.02em;margin:0}
+.login input{font:600 1.6rem var(--body);letter-spacing:.3em;text-align:center;width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--field);color:var(--fg)}
+.admin-bar{background:var(--ok-bg);color:var(--ok);border-radius:10px;padding:10px 14px;font-weight:600;font-size:.92rem;margin:0}
+.thumb a.dl{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.65);color:#fff;border-radius:6px;font-size:.72rem;padding:2px 6px;text-decoration:none;z-index:1}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap login" id="loginView">
+  <form id="loginForm" autocomplete="off">
+    <h1>Accrington Lions club checklist</h1>
+    <p style="margin:0">Enter the 8-digit PIN Andrew sent you.</p>
+    <label for="pin" class="status">PIN</label>
+    <input id="pin" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="one-time-code" required>
+    <button class="btn" type="submit" id="loginBtn">Open checklist</button>
+    <p class="err" id="loginErr" hidden></p>
+  </form>
+</div>
+<div id="appView" hidden>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><h1>Accrington Lions club checklist</h1><span class="count" id="count">0 / 0</span></div>
+  <div class="bar" aria-hidden="true"><span id="barfill"></span></div>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <p><strong>Hi Jason.</strong> This is everything we need for the Sport England and National Lottery bids, England Boxing and the club paperwork.</p>
+    <p>Tap a section to open it. Answers save as you go, so you can stop and come back any time. Use the photo buttons to take a picture or pick one from your phone.</p>
+    <p class="note">The <strong>Submit</strong> button at the bottom only unlocks when every item has a green tick.</p>
+    <p class="admin-bar" id="adminBar" hidden>Admin view. You can see and save everything Jason adds.</p>
+    <p class="status" id="status">Loading…</p>
+  </div>
+  <div id="sections"></div>
+  <div class="finish" id="finish">
+    <h2>Submit</h2>
+    <p id="finishText" style="margin:0"></p>
+    <ul class="left-list" id="leftList"></ul>
+    <button class="btn ghost" id="jumpBtn" type="button">Show me the next item left</button>
+    <button class="btn" id="submitBtn" type="button" disabled>Submit checklist</button>
+    <div class="done-box" id="doneBox" hidden></div>
+  </div>
+</main>
+</div>
+
+<script>
+(() => {
+'use strict';
+const S = [
+ {id:'defib', title:'Defibrillator', note:'Urgent. The window on the defibrillator showed 22 Oct 2026, which is the pads’ expiry date, so they need replacing.', items:[
+  {id:'pads_new', t:'text', q:'New pads fitted: what date shows in the window now?', h:'Model: Mindray BeneHeart C1A'},
+  {id:'pads_photo', t:'photo', q:'Photo of the new date in the window'},
+  {id:'battery', t:'choice', q:'Battery / status light', o:['OK','Not OK']},
+  {id:'child_pads', t:'choice', q:'Child pads or child mode?', o:['Yes','No','Not sure']},
+  {id:'defib_where', t:'text', q:'Where is it in the gym?', h:'e.g. on the wall by the main entrance'},
+  {id:'defib_checks', t:'choice', q:'Weekly check sheet started?', o:['Yes','No']},
+  {id:'circuit', t:'choice', q:'Registered on The Circuit?', h:'thecircuit.uk is the national defibrillator map that 999 uses', o:['Yes','No']},
+ ]},
+ {id:'safe', title:'Safeguarding', items:[
+  {id:'cwo', t:'text', q:'Club Welfare Officer: name and phone'},
+  {id:'cwo_checks', t:'text', q:'Welfare Officer: DBS check date and safeguarding course date'},
+  {id:'dep', t:'text', q:'Deputy Welfare Officer: name and phone', h:'Ideally someone not related to you, e.g. Caroline Jones or Philip Blackmore'},
+  {id:'dep_checks', t:'text', q:'Deputy: DBS check date and safeguarding course date'},
+  {id:'page6', t:'photo', q:'Photo of page 6 of the safeguarding policy', h:'It’s missing from the scanned copy'},
+  {id:'sign_v14', t:'choice', q:'Happy to sign the updated safeguarding policy (v1.4)?', o:['Yes','Needs changes']},
+  {id:'concerns', t:'text', q:'Safeguarding concerns logged in the last 12 months', h:'Just a number. No details', short:true},
+ ]},
+ {id:'club', title:'The club', items:[
+  {id:'coach', t:'text', q:'Head Coach and coaching level', h:'e.g. Jason Curtis, Level 2', short:true},
+  {id:'coaches', t:'text', q:'Other coaches and their levels'},
+  {id:'eb_no', t:'text', q:'England Boxing affiliation number and renewal date', short:true},
+  {id:'members', t:'text', q:'Total members', h:'About 100?', short:true},
+  {id:'carded', t:'text', q:'Registered competitive boxers', h:'36?', short:true},
+  {id:'ages', t:'text', q:'Members by age', h:'Under 11 / 11–17 / 18–25 / 26+'},
+  {id:'girls', t:'text', q:'How many girls and women?', short:true},
+  {id:'disab', t:'text', q:'How many members have a disability?', short:true},
+  {id:'vols', t:'text', q:'Volunteers (not coaches): how many and what they do'},
+  {id:'fees', t:'text', q:'Fees', h:'Price per session, and any free or reduced places'},
+  {id:'started', t:'text', q:'Year the club started', short:true},
+  {id:'timetable', t:'text', q:'Weekly timetable', h:'One line per session, e.g. “Mon 6–7pm juniors, about 20”'},
+ ]},
+ {id:'lease', title:'The gym and lease', items:[
+  {id:'lease_dates', t:'text', q:'Lease start date and end date', short:true},
+  {id:'rent', t:'text', q:'Rent per month', short:true},
+  {id:'landlord', t:'text', q:'Landlord contact at B&E Boys pension fund', h:'Name and work email'},
+  {id:'extend', t:'choice', q:'Would the landlord extend the lease?', h:'Some funders want 3+ years left for building work', o:['Yes','No','Not asked yet']},
+  {id:'insurer', t:'text', q:'Club insurance: who with, and expiry date'},
+  {id:'size', t:'text', q:'Rough size of the gym', h:'Square metres or feet, if known', short:true},
+ ]},
+ {id:'repairs', title:'Repairs and refurbishment', note:'The most important section. Rough costs are fine.', items:[
+  {id:'repair_list', t:'text', q:'Everything that needs fixing, replacing or improving', h:'One line each: item, what’s wrong, rough cost. e.g. “Ring canvas, torn, £900”', big:true},
+  {id:'repair_total', t:'text', q:'Total of everything above (£)', short:true},
+  {id:'contrib', t:'text', q:'Anything the club could put in itself?', h:'Money or volunteer time. Funders like to see some'},
+  {id:'quotes', t:'file', q:'Quotes for the bigger items', h:'Photos or PDFs', skip:true},
+  {id:'before', t:'photo', q:'Before photos: gym, worn kit, areas to refurbish', min:3, h:'At least 3 photos'},
+ ]},
+ {id:'community', title:'Community work so far', items:[
+  {id:'schools', t:'text', q:'Schools you’ve worked with', h:'Names, what you did, roughly how many children, when'},
+  {id:'special', t:'text', q:'Special schools (behavioural needs)', h:'Which schools, how often, how many children'},
+  {id:'disability', t:'text', q:'Disability sessions', h:'Physical and learning disabilities, adults and children. How often, how many'},
+  {id:'links', t:'text', q:'Links with police, youth services or the council', h:'Names of organisations'},
+  {id:'support', t:'text', q:'Who could write a letter of support?', h:'e.g. a head teacher, PCSO or councillor who knows the club'},
+ ]},
+ {id:'outreach', title:'Outreach plans', items:[
+  {id:'reach', t:'text', q:'Who do you most want to reach?', h:'e.g. young people at risk, girls, people who aren’t active, disabled people'},
+  {id:'opendays', t:'text', q:'Open days or taster sessions', h:'How many, roughly when, how many people'},
+  {id:'visits', t:'text', q:'School visits planned', h:'Which schools, how many visits'},
+  {id:'publicity', t:'text', q:'Publicity', h:'Leaflets, banners, social media, local press, and rough costs'},
+  {id:'social', t:'text', q:'Social media pages and follower numbers', short:true},
+  {id:'outreach_costs', t:'text', q:'Other costs for outreach', h:'e.g. extra coach hours, beginner kit, printing'},
+ ]},
+ {id:'stories', title:'Stories and photos', note:'Short stories of people the club has helped. No names.', items:[
+  {id:'story1', t:'text', q:'Story 1', h:'e.g. “A 14-year-old excluded from school started coming three nights a week…”', big:true},
+  {id:'story2', t:'text', q:'Story 2', big:true},
+  {id:'story3', t:'text', q:'Story 3', big:true},
+  {id:'action', t:'photo', q:'Photos of the club in action', min:2, h:'At least 2: a training session and a community or school session'},
+  {id:'consent', t:'choice', q:'Do you have permission to use these photos?', h:'For under-18s, parents must have agreed', o:['Yes, permission given']},
+ ]},
+ {id:'decide', title:'Decisions', items:[
+  {id:'asset_body', t:'text', q:'Who gets the club’s assets if it ever closes?', h:'Suggested: Accrington Stanley Community Trust. Write “Agreed” or name another local charity', short:true},
+  {id:'quorum', t:'choice', q:'Meeting quorum: 10 members or a third of members, whichever is fewer. OK?', o:['OK','Want a different number']},
+  {id:'sign_dirs', t:'choice', q:'Will Max, Jim Palmer and Shabir Siddiq sign the change to the club’s rules?', h:'At least 3 of the 4 directors must sign', o:['Yes','Not sure yet']},
+  {id:'committee', t:'text', q:'Is the committee still the same?', h:'Write “No changes”, or list who has changed', ref:true, short:true},
+ ]},
+ {id:'docs', title:'Documents', note:'A clear phone photo of a paper document is fine.', items:[
+  {id:'d_bank', t:'file', q:'Recent bank statement (last 3 months, in the club’s name)'},
+  {id:'d_accounts', t:'file', q:'Latest annual accounts'},
+  {id:'d_lease', t:'file', q:'Copy of the lease', skip:true},
+  {id:'d_landlord', t:'file', q:'Landlord’s OK for the refurbishment (email or letter)', skip:true},
+  {id:'d_insurance', t:'file', q:'Club insurance certificate'},
+  {id:'d_coach', t:'file', q:'Head coach’s coaching certificate', skip:true},
+  {id:'d_eb', t:'file', q:'England Boxing affiliation confirmation', skip:true},
+  {id:'d_support', t:'file', q:'Letters of support', skip:true},
+  {id:'d_logo', t:'file', q:'Club logo (good-quality picture)', skip:true},
+ ]},
+ {id:'contacts', title:'Contacts for the bids', note:'Two board members who aren’t related and don’t live together. Dates of birth and home addresses will be collected separately, not here.', items:[
+  {id:'c1', t:'text', q:'Contact 1: name, role, email, phone'},
+  {id:'c2', t:'text', q:'Contact 2: name, role, email, phone'},
+  {id:'filled_by', t:'text', q:'Your name (who filled this in)', short:true},
+ ]},
+];
+const COMMITTEE = [['Chair','Jason Curtis'],['Vice Chair','Max Curtis'],['Secretary','Philip Blackmore'],['Treasurer','Caroline Jones'],['Fixtures Secretary','Shabir Siddiq'],['Publicity Officer','Ishtaq Ahmed'],['Volunteer Coordinator','Jim Palmer'],['Welfare Officer','Jason Curtis'],['Deputy Welfare Officer','Alison Curtis']];
+const ALL = S.flatMap(s => s.items.map(it => ({...it, sec:s.id})));
+const DOC_PATH = 'checklist/answers';
+
+let state = {answers:{}, files:{}, skips:{}, submitted:false, submittedAt:null};
+let PIN = '', ROLE = null, canSave = false;
+const assets = true;
+async function api(path, opts = {}) {
+  const r = await fetch('/api/' + path, {...opts, headers:{'x-pin':PIN, ...(opts.headers || {})}});
+  if (r.status === 401) { const e = new Error('wrong_pin'); e.code = 'wrong_pin'; throw e; }
+  if (!r.ok) { let c = 'error'; try { c = (await r.json()).error || c; } catch (_) {} const e = new Error(c); e.code = c; throw e; }
+  return r;
+}
+const urlCache = new Map();
+function fileUrl(id) {
+  if (urlCache.has(id)) return urlCache.get(id);
+  const p = api('file/' + id).then(r => r.blob()).then(b => URL.createObjectURL(b));
+  urlCache.set(id, p); p.catch(() => urlCache.delete(id));
+  return p;
+}
+let dirty = false, saving = false, saveTimer = null, hydrated = false;
+const LS = 'alcbc-checklist-draft-v2';
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+try { const d = JSON.parse(localStorage.getItem(LS) || 'null'); if (d && d.answers) state = {...state, ...d}; } catch (_) {}
+
+function isDone(it){
+  if (it.t === 'text' || it.t === 'choice') return !!String(state.answers[it.id] || '').trim();
+  const n = (state.files[it.id] || []).length;
+  if (n >= (it.min || 1)) return true;
+  return !!(it.skip && String(state.skips[it.id] || '').trim());
+}
+
+function setStatus(t){ $('status').textContent = t; }
+
+function queueSave(){
+  try { localStorage.setItem(LS, JSON.stringify(state)); } catch (_) {}
+  if (!canSave) return;
+  dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900);
+  setStatus('Saving…');
+}
+async function flush(){
+  if (!canSave || saving || !dirty) return;
+  saving = true; dirty = false;
+  try {
+    const r = await api('answers', {method:'PUT', headers:{'content-type':'application/json'}, body:JSON.stringify(state)});
+    const j = await r.json();
+    setStatus('All changes saved ' + new Date(j.updatedAt).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}));
+  } catch (e) {
+    dirty = true;
+    setStatus(e && e.code === 'wrong_pin' ? 'Your PIN was not accepted. Reload the page and enter it again.' : 'Couldn\u2019t save just now. Your answers are kept on this phone and will save when you\u2019re back online.');
+  } finally { saving = false; if (dirty) saveTimer = setTimeout(flush, 3000); }
+}
+
+async function shrink(file){
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type) && !(file.type === '' && /\.(jpe?g|png|heic)$/i.test(file.name))) return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width*k); c.height = Math.round(bmp.height*k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const b = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.84));
+    return b || file;
+  } catch (_) { return file; }
+}
+
+const openSet = new Set();
+function render(){
+  const root = $('sections'); root.textContent = '';
+  for (const s of S) {
+    const done = s.items.filter(isDone).length;
+    const card = el('section', 'card' + (openSet.has(s.id) ? ' open' : '')); card.id = 'sec-' + s.id;
+    const head = el('button', 'head'); head.type = 'button'; head.setAttribute('aria-expanded', openSet.has(s.id));
+    head.append(el('h2', null, s.title));
+    const pill = el('span', 'pill' + (done === s.items.length ? ' done' : ''), done === s.items.length ? 'Done' : done + ' / ' + s.items.length);
+    const chev = el('span', 'chev', '▾');
+    head.append(pill, chev);
+    head.addEventListener('click', () => { openSet.has(s.id) ? openSet.delete(s.id) : openSet.add(s.id); render(); });
+    card.append(head);
+    const body = el('div', 'body'); body.hidden = !openSet.has(s.id);
+    if (s.note) body.append(el('p', 'sec-note', s.note));
+    for (const it of s.items) body.append(renderItem(it));
+    card.append(body); root.append(card);
+  }
+  renderProgress();
+}
+
+function renderItem(it){
+  const box = el('div', 'item' + (isDone(it) ? ' complete' : '')); box.id = 'item-' + it.id;
+  const q = el('div', 'q'); const tick = el('span', 'tick'); tick.setAttribute('aria-hidden', 'true');
+  const lab = el(it.t === 'text' ? 'label' : 'span', it.t === 'text' ? null : 'qt', it.q);
+  if (it.t === 'text') lab.htmlFor = 'f-' + it.id;
+  q.append(tick, lab); box.append(q);
+  if (it.h) box.append(el('p', 'hint', it.h));
+  const ctrl = el('div', 'ctrl');
+  if (it.ref) {
+    const r = el('div', 'ref'); const tb = el('table');
+    for (const [a,b] of COMMITTEE) { const tr = el('tr'); tr.append(el('td', null, a), el('td', null, b)); tb.append(tr); }
+    r.append(tb); ctrl.append(r);
+  }
+  if (it.t === 'text') {
+    const f = it.short ? el('input') : el('textarea');
+    if (it.short) f.type = 'text';
+    if (it.big) f.style.minHeight = '140px';
+    f.id = 'f-' + it.id; f.value = state.answers[it.id] || ''; f.disabled = !canSave && hydrated;
+    f.addEventListener('input', () => {
+      state.answers[it.id] = f.value;
+      if (state.submitted && !allDone()) state.submitted = false;
+      box.classList.toggle('complete', isDone(it)); renderProgress(true); queueSave();
+    });
+    ctrl.append(f);
+  } else if (it.t === 'choice') {
+    const wrap = el('div', 'choices'); wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', it.q);
+    for (const o of it.o) {
+      const b = el('button', null, o); b.type = 'button'; b.id = 'f-' + it.id + '-' + it.o.indexOf(o);
+      b.setAttribute('aria-pressed', state.answers[it.id] === o); b.disabled = !canSave && hydrated;
+      b.addEventListener('click', () => { state.answers[it.id] = state.answers[it.id] === o ? '' : o; if (state.submitted && !allDone()) state.submitted = false; queueSave(); render(); });
+      wrap.append(b);
+    }
+    ctrl.append(wrap);
+  } else {
+    const list = state.files[it.id] || [];
+    if (list.length) {
+      const th = el('div', 'thumbs');
+      for (const f of list) {
+        const t = el('div', 'thumb');
+        if (/^image\/(jpeg|png|webp)$/.test(f.type)) { const im = el('img'); im.alt = f.name || 'Uploaded photo'; fileUrl(f.id).then(u => { im.src = u; }).catch(() => im.remove()); t.append(im); }
+        else t.append(document.createTextNode((f.name || 'Document').slice(0, 40)));
+        if (ROLE === 'admin') { const a = el('a', 'dl', 'Save'); a.href = '#'; a.addEventListener('click', async ev => { ev.preventDefault(); try { const u = await fileUrl(f.id); const x = document.createElement('a'); x.href = u; x.download = f.name || 'file'; document.body.append(x); x.click(); x.remove(); } catch (_) {} }); t.append(a); }
+        if (canSave) {
+          const x = el('button', null, '×'); x.type = 'button'; x.setAttribute('aria-label', 'Remove ' + (f.name || 'file'));
+          x.addEventListener('click', () => { api('file/' + f.id, {method:'DELETE'}).catch(() => {}); state.files[it.id] = list.filter(z => z !== f); if (state.submitted && !allDone()) state.submitted = false; queueSave(); render(); });
+          t.append(x);
+        }
+        th.append(t);
+      }
+      ctrl.append(th);
+    }
+    if (assets && canSave) {
+      const up = el('label', 'upl'); const inp = el('input'); inp.type = 'file'; inp.id = 'f-' + it.id; inp.multiple = true;
+      inp.accept = it.t === 'photo' ? 'image/*' : 'image/*,application/pdf';
+      const txt = el('span', null, it.t === 'photo' ? (list.length ? '+ Add another photo' : '📷 Take or choose a photo') : (list.length ? '+ Add another file' : '📎 Add photo or PDF'));
+      up.append(inp, txt);
+      const err = el('p', 'err'); err.hidden = true;
+      inp.addEventListener('change', async () => {
+        const files = [...inp.files]; if (!files.length) return;
+        up.classList.add('busy'); txt.textContent = 'Uploading…'; err.hidden = true;
+        for (const file of files) {
+          try {
+            const blob = await shrink(file);
+            const type = blob.type || (/\.pdf$/i.test(file.name) ? 'application/pdf' : 'image/jpeg');
+            if (blob.size > 4 * 1024 * 1024) { const e = new Error('too_large'); e.code = 'too_large'; throw e; }
+            const r = await (await api('upload', {method:'POST', headers:{'content-type':type, 'x-name':encodeURIComponent(file.name || 'file')}, body:blob})).json();
+            state.files[it.id] = [...(state.files[it.id] || []), {id:r.id, name:r.name, type:r.type}];
+          } catch (e) {
+            err.hidden = false;
+            err.textContent = e && e.code === 'unsupported_type' ? 'That file type can’t be uploaded. Use a photo (JPG or PNG) or a PDF.' : e && e.code === 'too_large' ? 'That file is too big (over 4 MB). Send a smaller PDF, or take a photo of the page instead.' : 'Upload failed. Check your signal and try again.';
+          }
+        }
+        queueSave(); render();
+        if (!err.hidden) { const again = $('item-' + it.id); if (again) { const p = el('p', 'err', err.textContent); again.querySelector('.ctrl').append(p); } }
+      });
+      ctrl.append(up);
+    } else if (hydrated) {
+      ctrl.append(el('p', 'hint', 'Uploads aren\u2019t available right now. Reload the page and try again.'));
+    }
+    if (it.skip) {
+      const sk = el('label', 'skip'); const cb = el('input'); cb.type = 'checkbox'; cb.id = 'sk-' + it.id;
+      const has = state.skips[it.id] != null; cb.checked = has; cb.disabled = !canSave && hydrated;
+      sk.append(cb, document.createTextNode('I can’t provide this'));
+      ctrl.append(sk);
+      if (has) {
+        const why = el('input'); why.type = 'text'; why.id = 'why-' + it.id; why.placeholder = 'Why not? (needed to tick this off)';
+        why.value = state.skips[it.id] || ''; why.disabled = !canSave && hydrated;
+        why.addEventListener('input', () => { state.skips[it.id] = why.value; if (state.submitted && !allDone()) state.submitted = false; box.classList.toggle('complete', isDone(it)); renderProgress(true); queueSave(); });
+        ctrl.append(why);
+      }
+      cb.addEventListener('change', () => { if (cb.checked) state.skips[it.id] = ''; else delete state.skips[it.id]; if (state.submitted && !allDone()) state.submitted = false; queueSave(); render(); const w = $('why-' + it.id); if (w) w.focus(); });
+    }
+  }
+  box.append(ctrl);
+  return box;
+}
+
+const allDone = () => ALL.every(isDone);
+function renderProgress(soft){
+  const done = ALL.filter(isDone).length, total = ALL.length;
+  $('count').textContent = done + ' / ' + total;
+  $('barfill').style.width = (100 * done / total) + '%';
+  if (soft) {
+    for (const s of S) {
+      const p = document.querySelector('#sec-' + s.id + ' .pill'); if (!p) continue;
+      const d = s.items.filter(isDone).length;
+      p.textContent = d === s.items.length ? 'Done' : d + ' / ' + s.items.length; p.classList.toggle('done', d === s.items.length);
+    }
+  }
+  const left = ALL.filter(it => !isDone(it));
+  const ll = $('leftList'); ll.textContent = '';
+  const btn = $('submitBtn'), done_ = $('doneBox');
+  if (state.submitted && !left.length) {
+    $('finishText').textContent = 'Submitted. Thanks, Jason.';
+    done_.hidden = false; done_.textContent = 'Checklist submitted' + (state.submittedAt ? ' on ' + new Date(state.submittedAt).toLocaleString('en-GB', {dateStyle:'medium', timeStyle:'short'}) : '') + '. You can still change answers; it stays submitted while everything is filled in.';
+    btn.hidden = true; $('jumpBtn').hidden = true; return;
+  }
+  done_.hidden = true; btn.hidden = false;
+  if (!left.length) {
+    $('finishText').textContent = 'Everything has a green tick. Tap Submit to finish.';
+    btn.disabled = !canSave; $('jumpBtn').hidden = true;
+  } else {
+    $('finishText').textContent = left.length + (left.length === 1 ? ' item' : ' items') + ' left before you can submit:';
+    btn.disabled = true; $('jumpBtn').hidden = false;
+    const bySec = {};
+    for (const it of left) bySec[it.sec] = (bySec[it.sec] || 0) + 1;
+    for (const s of S) if (bySec[s.id]) ll.append(el('li', null, s.title + ': ' + bySec[s.id] + ' left'));
+  }
+}
+
+$('jumpBtn').addEventListener('click', () => {
+  const it = ALL.find(x => !isDone(x)); if (!it) return;
+  openSet.add(it.sec); render();
+  const box = $('item-' + it.id); if (!box) return;
+  box.classList.add('flag'); box.scrollIntoView({behavior:'smooth', block:'center'});
+  const f = box.querySelector('input,textarea,button'); if (f) setTimeout(() => f.focus({preventScroll:true}), 350);
+});
+$('submitBtn').addEventListener('click', async () => {
+  if (!allDone() || !canSave) return;
+  state.submitted = true; state.submittedAt = new Date().toISOString();
+  dirty = true; clearTimeout(saveTimer); await flush(); render();
+  window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+});
+
+render();
+
+async function load(){
+  const r = await api('answers');
+  const remote = await r.json();
+  hydrated = true; canSave = true;
+  if (remote && remote.answers) {
+    state = {answers:{...remote.answers}, files:{...(remote.files || {})}, skips:{...(remote.skips || {})}, submitted:!!remote.submitted, submittedAt:remote.submittedAt || null};
+  } else if (Object.keys(state.answers).length) { queueSave(); }
+  setStatus(remote && remote.updatedAt ? 'Last saved ' + new Date(remote.updatedAt).toLocaleString('en-GB', {dateStyle:'medium', timeStyle:'short'}) : 'Answers save automatically as you go.');
+  render();
+}
+async function enter(pin){
+  PIN = pin;
+  const r = await api('me');
+  ROLE = (await r.json()).role;
+  try { sessionStorage.setItem('alcbc-pin', pin); } catch (_) {}
+  $('loginView').hidden = true; $('appView').hidden = false;
+  $('adminBar').hidden = ROLE !== 'admin';
+  if (ROLE === 'admin') S.forEach(s => openSet.add(s.id));
+  await load();
+}
+$('loginForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const pin = $('pin').value.replace(/\D/g, '');
+  $('loginErr').hidden = true; $('loginBtn').disabled = true; $('loginBtn').textContent = 'Checking\u2026';
+  try { await enter(pin); }
+  catch (e) { $('loginErr').hidden = false; $('loginErr').textContent = e.code === 'wrong_pin' ? 'That PIN isn\u2019t right. Check the message from Andrew and try again.' : 'Can\u2019t connect. Check your signal and try again.'; }
+  finally { $('loginBtn').disabled = false; $('loginBtn').textContent = 'Open checklist'; }
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && dirty) { clearTimeout(saveTimer); flush(); } });
+(async () => { let p = null; try { p = sessionStorage.getItem('alcbc-pin'); } catch (_) {} if (p) { try { await enter(p); } catch (_) { $('loginView').hidden = false; $('appView').hidden = true; } } })();
+})();
+</script>
+</body>
+</html>
