@@ -485,7 +485,7 @@ async function enter(pin){
   PIN = pin;
   const r = await api('me');
   ROLE = (await r.json()).role;
-  try { sessionStorage.setItem('alcbc-pin', pin); } catch (_) {}
+  try { localStorage.setItem('alcbc-pin', pin); } catch (_) {}
   $('loginView').hidden = true; $('appView').hidden = false;
   $('adminBar').hidden = ROLE !== 'admin';
   if (ROLE === 'admin') S.forEach(s => openSet.add(s.id));
@@ -499,8 +499,14 @@ $('loginForm').addEventListener('submit', async ev => {
   catch (e) { $('loginErr').hidden = false; $('loginErr').textContent = e.code === 'wrong_pin' ? 'That PIN isn\u2019t right. Check the message from Andrew and try again.' : 'Can\u2019t connect. Check your signal and try again.'; }
   finally { $('loginBtn').disabled = false; $('loginBtn').textContent = 'Open checklist'; }
 });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+window.addEventListener('online', () => { if (dirty) { clearTimeout(saveTimer); flush(); } });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && dirty) { clearTimeout(saveTimer); flush(); } });
-(async () => { let p = null; try { p = sessionStorage.getItem('alcbc-pin'); } catch (_) {} if (p) { try { await enter(p); } catch (_) { $('loginView').hidden = false; $('appView').hidden = true; } } })();
+(async () => { let p = null; try { p = localStorage.getItem('alcbc-pin'); } catch (_) {} if (p) { try { await enter(p); } catch (e) {
+    if (e && e.code === 'wrong_pin') { $('loginView').hidden = false; $('appView').hidden = true; return; }
+    PIN = p; $('loginView').hidden = true; $('appView').hidden = false; canSave = true; hydrated = true;
+    setStatus('No signal. You can keep typing; answers save to the server when you\u2019re back online. Photos need signal.'); render();
+  } } })();
 })();
 </script>
 </body>
