@@ -8,7 +8,9 @@ Collected from Jason Curtis, 25 Nov 2026. Use these in funding applications.
 - 36 registered competitive boxers, all registered and medically checked with England Boxing.
 - Head Coach: Jason Curtis. Coaching level: [to confirm, e.g. Level 2].
 - Club Welfare Officer: Jason Curtis. Deputy: Alison Curtis (per the April 2025 constitution).
-- Has its own defibrillator in the gym (seen 25 Nov 2026).
+- Has its own defibrillator in the gym (seen 25 Nov 2026): Mindray BeneHeart C1A, serial AF1-22031026, made 4 Mar 2022, in a wall-mounted green AED cabinet with alarm.
+  - **Pads expiry window shows 22 Oct 2026, which is already past. Replacement pads needed.**
+  - To check: battery status, child pads or child mode, weekly check log, registered on The Circuit (national defibrillator network).
 - Has a safeguarding policy (last reviewed Jan 2025; v1.4 draft prepared) and a bank account in the club's name.
 
 ## Premises
