@@ -280,7 +280,7 @@ svg text{font-family:var(--f-num);font-size:11px;fill:var(--muted)}
     <div class="view-head"><div><h2 id="formTitle">Add a listing</h2><p>Paste a listing to fill this in, or type the details. Only the price, size and area are needed for the deal score.</p></div></div>
     <div class="panel" id="pastePanel" style="margin-bottom:16px">
       <h3 style="font-size:16px">Paste a listing</h3>
-      <p class="hint" style="margin:0">On Bayut, Property Finder or Dubizzle, copy the listing (select all, then copy), or tap <strong>Share → Copy</strong> in their app. Paste it here and the form below fills itself in. Check it, then press Save.</p>
+      <p class="hint" style="margin:0">On Bayut, Property Finder or Dubizzle, tap <strong>Share → Copy</strong> to copy the link, or copy the listing text. Paste it here and the app looks the listing up and fills in the form. Check it, then press Save.</p>
       <div class="field"><label for="pText">Listing text or shared link</label><textarea id="pText" style="min-height:110px" placeholder="e.g. AED 250,000 Yearly · 3 Beds · 4 Baths · 2,450 sqft · Villa · Alvorada, Arabian Ranches · https://www.bayut.com/property/details-…"></textarea></div>
       <div class="row"><button class="btn primary" type="button" id="pFill">Fill in the form</button><button class="btn ghost" type="button" id="pClear">Clear</button></div>
       <div id="pResult" class="hint" aria-live="polite"></div>
@@ -764,20 +764,42 @@ function applyParsed(p){
   if (noteBits && !$("#aNotes").value.trim()) $("#aNotes").value = noteBits;
 }
 
-function fillFromPaste(){
-  const text = $("#pText").value.trim(), res = $("#pResult");
-  if (!text) { res.textContent = "Paste the listing text or shared link first."; return; }
+const LINK_SITES = /^https:\/\/([a-z0-9-]+\.)*(bayut\.com|propertyfinder\.ae|dubizzle\.com)\//i;
+let looking = false;
+async function fillFromPaste(){
+  if (looking) return;
+  let text = $("#pText").value.trim(); const res = $("#pResult");
+  if (!text) { res.textContent = "Paste a listing link or the listing text first."; return; }
+  const link = (text.match(/https:\/\/[^\s"'<>)]+/i) || [""])[0].replace(/[.,]+$/, "");
+  const rest = text.replace(link, "").replace(/check out|this|on bayut|property finder|dubizzle|[:\-\s]/gi, "");
+  let looked = null;
+  if (link && LINK_SITES.test(link) && rest.length < 60) {
+    looking = true; $("#pFill").disabled = true; res.textContent = "Looking up the listing…";
+    try {
+      const r = await fetch("/api/lookup?url=" + encodeURIComponent(link));
+      looked = await r.json().catch(() => ({ok: false, reason: r.status === 429 ? "busy" : "unreachable"}));
+      if (r.status === 429) looked = {ok: false, reason: "busy"};
+    } catch { looked = {ok: false, reason: "offline"}; }
+    finally { looking = false; $("#pFill").disabled = false; }
+    if (looked && looked.ok) text = looked.text + "\n" + (looked.url || link);
+  }
   const p = parseListing(text);
+  if (link && !p.url) p.url = link;
   applyParsed(p);
   const got = [], miss = [];
   [["price", p.price ? aed(p.price) + (p.mode === "rent" ? " a year" : "") : ""], ["rent or buy", p.mode === "buy" ? "Buy" : p.mode === "rent" ? "Rent" : ""], ["bedrooms", p.beds], ["size", p.sqft ? p.sqft.toLocaleString("en-US") + " sq ft" : ""], ["type", p.ptype], ["area", p.community], ["link", p.url ? "added" : ""]]
     .forEach(([k, v]) => (v ? got : miss).push(v ? `${k}: ${v}` : k));
   res.innerHTML = "";
-  const a = document.createElement("p"); a.style.margin = "8px 0 0"; a.textContent = got.length ? "Found " + got.join(" · ") : "Couldn't find any details in that text.";
-  res.appendChild(a);
-  if (miss.length) { const b = document.createElement("p"); b.style.margin = "4px 0 0"; b.style.color = "var(--warn)"; b.textContent = "Not found, so please fill in: " + miss.join(", ") + "."; res.appendChild(b); }
-  if (p.beds && (p.beds < 3 || p.beds > 4)) { const c = document.createElement("p"); c.style.margin = "4px 0 0"; c.style.color = "var(--warn)"; c.textContent = `This looks like a ${p.beds}-bed home. Check it's one Tom wants.`; res.appendChild(c); }
-  (miss.includes("size") ? $("#aSqft") : miss.includes("price") ? $("#aPrice") : $("#aSave")).focus();
+  const line = (txt, color) => { const e = document.createElement("p"); e.style.margin = "6px 0 0"; if (color) e.style.color = color; e.textContent = txt; res.appendChild(e); return e; };
+  if (looked && !looked.ok) {
+    const why = {blocked: "The listing site didn't let the app read that page.", no_details: "The page didn't include the details.", busy: "Too many look-ups in a row. Wait a minute and try again.", offline: "You seem to be offline.", not_supported: "Only Bayut, Property Finder and Dubizzle links can be looked up."}[looked.reason] || "Couldn't reach the listing.";
+    line(why + " Open the listing, then copy the price, beds, size and area into the form (or paste the listing text here).", "var(--warn)");
+    const a = document.createElement("a"); a.href = link; a.target = "_blank"; a.rel = "noopener"; a.className = "btn"; a.style.marginTop = "8px"; a.textContent = "Open listing ↗"; res.appendChild(a);
+  }
+  line(got.length ? "Found " + got.join(" · ") : "Couldn't find any details in that text.");
+  if (miss.length) line("Not found, so please fill in: " + miss.join(", ") + ".", "var(--warn)");
+  if (p.beds && (p.beds < 3 || p.beds > 4)) line(`This looks like a ${p.beds}-bed home. Check it's one Tom wants.`, "var(--warn)");
+  if (!(looked && !looked.ok)) (miss.includes("size") ? $("#aSqft") : miss.includes("price") ? $("#aPrice") : $("#aSave")).focus();
 }
 $("#pFill").addEventListener("click", fillFromPaste);
 $("#pText").addEventListener("paste", () => setTimeout(fillFromPaste, 0));
