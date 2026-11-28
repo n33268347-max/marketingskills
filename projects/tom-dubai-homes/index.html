@@ -277,7 +277,14 @@ svg text{font-family:var(--f-num);font-size:11px;fill:var(--muted)}
 
   <!-- ADD / EDIT -->
   <section id="view-add" data-v hidden>
-    <div class="view-head"><div><h2 id="formTitle">Add a listing</h2><p>Copy the details from the listing page. Only the price, size and area are needed for the deal score.</p></div></div>
+    <div class="view-head"><div><h2 id="formTitle">Add a listing</h2><p>Paste a listing to fill this in, or type the details. Only the price, size and area are needed for the deal score.</p></div></div>
+    <div class="panel" id="pastePanel" style="margin-bottom:16px">
+      <h3 style="font-size:16px">Paste a listing</h3>
+      <p class="hint" style="margin:0">On Bayut, Property Finder or Dubizzle, copy the listing (select all, then copy), or tap <strong>Share → Copy</strong> in their app. Paste it here and the form below fills itself in. Check it, then press Save.</p>
+      <div class="field"><label for="pText">Listing text or shared link</label><textarea id="pText" style="min-height:110px" placeholder="e.g. AED 250,000 Yearly · 3 Beds · 4 Baths · 2,450 sqft · Villa · Alvorada, Arabian Ranches · https://www.bayut.com/property/details-…"></textarea></div>
+      <div class="row"><button class="btn primary" type="button" id="pFill">Fill in the form</button><button class="btn ghost" type="button" id="pClear">Clear</button></div>
+      <div id="pResult" class="hint" aria-live="polite"></div>
+    </div>
     <form class="panel form" id="addForm" autocomplete="off">
       <div class="field wide"><label for="aTitle">Name it</label><input type="text" id="aTitle" required maxlength="120" placeholder="e.g. Corner villa backing the park"></div>
       <div class="field"><span class="lbl">Rent or buy</span>
@@ -654,6 +661,127 @@ $("#addForm").addEventListener("submit", async e => {
   else { await create(Object.assign(data, {status:"New", fav:false, example:false, created: Date.now()})); toast("Listing added"); }
   editingId = null; filt.mode = "all"; syncFilterUI(); location.hash = "listings";
 });
+
+// ---------- paste a listing: read Bayut / Property Finder / Dubizzle text ----------
+const ALIASES = [
+  ["Damac Hills 2", /damac hills 2|dh2\b|akoya oxygen/i],
+  ["Damac Lagoons", /damac lagoons|\b(santorini|costa brava|portofino|nice|monte carlo|venice|malta|marbella|mykonos|morocco)\b.*lagoons?/i],
+  ["Damac Hills", /damac hills|akoya\b|trump estates|brookfield|golf town|the field|park residences/i],
+  ["Arabian Ranches 3", /arabian ranches (3|iii)|\b(sun|joy|bliss|elan|ruba|caya|anya|may|spring|june|raya|athlon)\b.*ranches 3/i],
+  ["Arabian Ranches", /arabian ranches|alvorada|palmera|mirador|saheel|savannah|hattan|al reem|\balma\b|\brosa\b|\blila\b|yasmin|samara|azalea|\brasha\b|casa\b.*ranches|palma\b.*ranches|al mahra|\bnaseem\b.*ranches/i],
+  ["Dubai Hills Estate", /dubai hills|\bmaple\b|\bsidra\b|club villas|parkways|golf place|\bcollective\b|park heights|golfville|emerald hills|\bfairways\b|palm hills|park ridge|acacia|mulberry|executive residences/i],
+  ["Jumeirah Golf Estates", /jumeirah golf estates?|\bjge\b|redwood|whispering pines|lime tree valley|olive point|wildflower|flame tree ridge|al andalus|sienna lakes/i],
+  ["The Springs", /\bthe springs\b|\bsprings \d|the meadows|meadows \d|the lakes|emirates living|\bhattan\b.*lakes/i],
+  ["Tilal Al Ghaf", /tilal al ghaf|\b(harmony|elysian|aura|serenity|alaya|lanai|aspen)\b.*(tilal|ghaf)/i],
+  ["Town Square", /town square|\b(zahra|safi|hayat|noor|jenna|naseem|reem|warda|sama|nshama)\b.*(town square|townhouses?)/i],
+  ["Mudon", /\bmudon\b|arabella|rahat\b|al salam.*mudon/i],
+  ["Villanova", /villanova|la rosa|amaranta|la quinta|\baurum\b/i],
+  ["The Valley", /the valley\b|\b(talia|eden|orania|alana|velora|nara)\b.*valley/i],
+  ["Emaar South", /emaar south|dubai south|expo golf villas|the pulse/i],
+  ["Al Furjan", /al furjan|furjan/i],
+  ["Sobha Hartland", /sobha hartland|hartland/i],
+  ["Jumeirah Village Circle", /jumeirah village (circle|triangle)|\bjvc\b|\bjvt\b/i],
+  ["Jumeirah Lake Towers", /jumeirah lake towers|\bjlt\b/i],
+  ["Dubai Marina", /dubai marina|\bmarina\b|\bjbr\b/i],
+  ["Palm Jumeirah", /palm jumeirah|\bthe palm\b/i],
+  ["Downtown Dubai", /downtown dubai|\bdowntown\b|burj khalifa|opera district/i],
+  ["Business Bay", /business bay/i],
+  ["Mirdif", /\bmirdif\b/i],
+  ["The Villa", /\bthe villa\b/i]
+];
+const num = s => parseFloat(String(s).replace(/,/g, ""));
+function parseListing(raw){
+  const t = String(raw || "").replace(/ /g, " ").replace(/[ \t]+/g, " ");
+  const out = {}, low = t.toLowerCase();
+  // link
+  const u = t.match(/https:\/\/[^\s"'<>)]+/i); if (u) out.url = u[0].replace(/[.,]+$/, "");
+  // price: "AED 250,000", "250,000 AED", "AED 2.5M", with optional period
+  const P = [];
+  const re1 = /(?:aed|dhs?|د\.إ)\s*([\d,]+(?:\.\d+)?)\s*(k|m|mn|million)?\b([^\d\n]{0,20})/gi;
+  const re2 = /([\d,]{4,}(?:\.\d+)?)\s*(?:aed|dhs?)\b([^\d\n]{0,20})/gi;
+  let m;
+  while ((m = re1.exec(t))) { let v = num(m[1]); const mult = (m[2]||"").toLowerCase(); if (mult === "k") v *= 1e3; if (/^m/.test(mult)) v *= 1e6; P.push({v, tail: m[3]||"", at: m.index}); }
+  while ((m = re2.exec(t))) P.push({v: num(m[1]), tail: m[2]||"", at: m.index});
+  P.sort((a,b) => a.at - b.at);
+  const price = P.find(p => p.v >= 20000 || (p.v >= 3000 && /month|\/mo\b/i.test(p.tail)));
+  let period = "";
+  if (price) {
+    const tail = price.tail.toLowerCase();
+    if (/month|\/mo\b|pm\b/.test(tail)) period = "month";
+    else if (/year|yearly|annual|\/yr|pa\b/.test(tail)) period = "year";
+    out.price = Math.round(period === "month" ? price.v * 12 : price.v);
+  }
+  // rent or buy
+  const rentWords = /\b(for rent|to rent|rental|yearly|per year|\/year|per annum|cheques?|ejari)\b/i.test(t);
+  const buyWords = /\b(for sale|to buy|buy\b|sale price|off[- ]plan|handover|title deed|mortgage|resale)\b/i.test(t);
+  if (period) out.mode = "rent";
+  else if (rentWords && !buyWords) out.mode = "rent";
+  else if (buyWords && !rentWords) out.mode = "buy";
+  else if (out.price) out.mode = out.price >= 900000 ? "buy" : "rent";
+  // beds
+  m = t.match(/(\d{1,2})\s*(?:beds?|bedrooms?|br\b|bhk|[- ]bed\b)/i) || t.match(/bedrooms?\s*[:\-]?\s*(\d{1,2})/i) || t.match(/beds?\s*[:\-]?\s*(\d{1,2})\b/i);
+  if (m) out.beds = parseInt(m[1], 10);
+  // size: prefer built-up area; skip plot size
+  const sizes = [];
+  const sre = /([\d,]{3,7}(?:\.\d+)?)\s*(sq\.?\s*ft|sqft|square feet|ft²|sq\.?\s*m\b|sqm|m²|square met(?:er|re)s?)/gi;
+  while ((m = sre.exec(t))) {
+    const before = low.slice(Math.max(0, m.index - 25), m.index);
+    let v = num(m[1]); if (/m\b|sqm|m²|met/i.test(m[2]) && !/ft/i.test(m[2])) v = v * 10.764;
+    sizes.push({v: Math.round(v), plot: /plot|land/.test(before), bua: /bua|built|size|area/.test(before)});
+  }
+  const sz = sizes.find(s => s.bua && !s.plot) || sizes.find(s => !s.plot && s.v >= 500 && s.v <= 20000);
+  if (sz) out.sqft = sz.v;
+  // type
+  if (/\btown ?house\b/i.test(t)) out.ptype = "Townhouse";
+  else if (/\bvilla\b/i.test(t)) out.ptype = "Villa";
+  else if (/\b(apartment|flat|penthouse|duplex|loft)\b/i.test(t)) out.ptype = "Apartment";
+  // area
+  for (const [name, rx] of ALIASES) { const a = t.match(rx); if (a) { out.community = name; out.sub = a[0]; break; } }
+  // cheques, furnishing, service charge
+  m = t.match(/(\d{1,2})\s*cheques?/i) || t.match(/cheques?\s*[:\-]?\s*(\d{1,2})/i); if (m) out.cheques = parseInt(m[1], 10);
+  if (/\bunfurnished\b/i.test(t)) out.furnished = false; else if (/\b(fully |semi[- ])?furnished\b/i.test(t)) out.furnished = true;
+  m = t.match(/service charges?[^\d]{0,30}([\d.]+)\s*(?:aed)?\s*(?:\/|per)\s*(?:sq\.?\s*ft|sqft)/i); if (m) out.sc = num(m[1]);
+  // a few useful extras for the notes
+  const extras = ["vacant","upgraded","private pool","pool","maid","garden","corner","single row","close to park","backing park","golf course view","sea view","vacant on transfer","brand new","handover"].filter(w => low.includes(w));
+  out.extras = [...new Set(extras)].slice(0, 5);
+  return out;
+}
+
+function applyParsed(p){
+  if (p.mode) setAddMode(p.mode);
+  if (p.ptype) $("#aType").value = p.ptype;
+  if (p.beds) $("#aBeds").value = p.beds >= 5 ? "5" : String(Math.max(3, p.beds));
+  if (p.community) $("#aArea").value = p.community;
+  if (p.price) $("#aPrice").value = p.price;
+  if (p.sqft) $("#aSqft").value = p.sqft;
+  if (p.cheques && [1,2,4,6,12].includes(p.cheques)) $("#aChq").value = String(p.cheques);
+  if (p.furnished !== undefined) $("#aFurn").value = p.furnished ? "1" : "0";
+  if (p.sc) $("#aSC").value = p.sc;
+  if (p.url) $("#aUrl").value = p.url;
+  const type = (p.ptype || "home").toLowerCase();
+  if (!$("#aTitle").value.trim()) $("#aTitle").value = `${p.beds ? p.beds + "-bed " : ""}${type}${p.sub && p.community && p.sub.toLowerCase() !== p.community.toLowerCase() ? ", " + p.sub.replace(/\b\w/g, c => c.toUpperCase()) : p.community ? ", " + p.community : ""}`;
+  const noteBits = [p.sub && p.community ? "Location: " + p.sub + "." : "", p.extras && p.extras.length ? "Features: " + p.extras.join(", ") + "." : ""].filter(Boolean).join(" ");
+  if (noteBits && !$("#aNotes").value.trim()) $("#aNotes").value = noteBits;
+}
+
+function fillFromPaste(){
+  const text = $("#pText").value.trim(), res = $("#pResult");
+  if (!text) { res.textContent = "Paste the listing text or shared link first."; return; }
+  const p = parseListing(text);
+  applyParsed(p);
+  const got = [], miss = [];
+  [["price", p.price ? aed(p.price) + (p.mode === "rent" ? " a year" : "") : ""], ["rent or buy", p.mode === "buy" ? "Buy" : p.mode === "rent" ? "Rent" : ""], ["bedrooms", p.beds], ["size", p.sqft ? p.sqft.toLocaleString("en-US") + " sq ft" : ""], ["type", p.ptype], ["area", p.community], ["link", p.url ? "added" : ""]]
+    .forEach(([k, v]) => (v ? got : miss).push(v ? `${k}: ${v}` : k));
+  res.innerHTML = "";
+  const a = document.createElement("p"); a.style.margin = "8px 0 0"; a.textContent = got.length ? "Found " + got.join(" · ") : "Couldn't find any details in that text.";
+  res.appendChild(a);
+  if (miss.length) { const b = document.createElement("p"); b.style.margin = "4px 0 0"; b.style.color = "var(--warn)"; b.textContent = "Not found, so please fill in: " + miss.join(", ") + "."; res.appendChild(b); }
+  if (p.beds && (p.beds < 3 || p.beds > 4)) { const c = document.createElement("p"); c.style.margin = "4px 0 0"; c.style.color = "var(--warn)"; c.textContent = `This looks like a ${p.beds}-bed home. Check it's one Tom wants.`; res.appendChild(c); }
+  (miss.includes("size") ? $("#aSqft") : miss.includes("price") ? $("#aPrice") : $("#aSave")).focus();
+}
+$("#pFill").addEventListener("click", fillFromPaste);
+$("#pText").addEventListener("paste", () => setTimeout(fillFromPaste, 0));
+$("#pClear").addEventListener("click", () => { $("#pText").value = ""; $("#pResult").textContent = ""; resetForm(); });
 
 // ---------- storage: Supabase, behind a shared passcode ----------
 const SB_URL = "https://itboogpxrjizqvjhzouc.supabase.co";
